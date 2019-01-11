@@ -1,0 +1,9 @@
+*.pyc
+*.png
+*.pdf
+.DS_Store
+*.swp
+*.eps
+*.csd
+*.mp3
+*.wav

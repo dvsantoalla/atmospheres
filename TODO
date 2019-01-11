@@ -1,0 +1,12 @@
+- Complete tests in "test.examples". First two
+
+	class TestPlucksUsingIncreasinglyComplexScales(unittest.TestCase):
+	class TestRhythmAccordingToValues(unittest.TestCase):
+
+- Add tests using more complex instruments, like 
+	More complex synths
+	Sample based synths
+	Partikkel grain synth
+
+
+- Lower priority. Try to get data from ECMWF via web api
