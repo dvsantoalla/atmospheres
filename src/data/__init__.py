@@ -3,7 +3,7 @@ import json
 import logging as log
 import constants as c
 
-def get(parameter,location=None,lat=None,lon=None,date=None,time="0000",dataset="10days",datatype="hres", datadir="data"):
+def get(parameter,location=None,lat=None,lon=None,date=None,time="0000",dataset="10days",datatype="hres", datadir="../atmospheres-misc/data"):
     
     data = {}
     files = os.listdir(datadir)
