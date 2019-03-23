@@ -14,7 +14,7 @@ def generate_cycles (scale, levels=1):
 
     extended_scale = transpose.extend(scale,levels)
     amplitudes = raised_and_normal.raised_cosine(number_of_values=len(extended_scale)-1)
-    log.debug(len(amplitudes),len(extended_scale))
+    log.debug("%s amplitudes, len of scale %s " % (len(amplitudes),len(extended_scale)))
     amplitudes += [0]*(len(extended_scale)-len(amplitudes))
     result = []
     for i in range(0,len(amplitudes)):

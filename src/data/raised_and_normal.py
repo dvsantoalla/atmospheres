@@ -44,7 +44,7 @@ def raised_cosine(beta=0.01,T=1.0,number_of_values=15):
 
        # print "Value for %s: %s" % (t,yvals[-1])
 
-    log.debug( "Generated %s raised_cosine values: %s" % (len(yvals),yvals))
+    log.debug("Generated %s raised_cosine values: %s" % (len(yvals), yvals))
     return yvals
 
 

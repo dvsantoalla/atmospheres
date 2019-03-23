@@ -12,6 +12,7 @@ def get_notes_following_spline(dataset,parameter_name, scale, starting_note, oct
         step: Number of notes by original data value"""
 
         mad2t = dataset
+        log.debug("Loaded data for spline %s" % mad2t)
 
         # Temperature vs Music Range
         # -30/+50 -> From Octave 0 to Octave 9
@@ -21,7 +22,7 @@ def get_notes_following_spline(dataset,parameter_name, scale, starting_note, oct
         for i in d_major_note_range:
             i.octave += octave_adjust
 
-        f1 = s.generate_spline(mad2t,step=step)
+        f1 = s.generate_spline(mad2t, step=step)
         upper_range = cc.RANGES[parameter_name][1]
         lower_range = cc.RANGES[parameter_name][0]
         notes = []

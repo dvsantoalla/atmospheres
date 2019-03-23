@@ -32,7 +32,8 @@ def basic_wave(instrument_number=1, function_number=1):
         return csd
 
 def oscillator1(points,instrument_number=1):
-	csd = """
+
+    csd = """
 
 	instr %s
 		kidx 	line 0, p3, %s ; p3 (duration) is in beats, "line" requires seconds. Ok as long as BPM=60
@@ -47,32 +48,34 @@ def oscillator1(points,instrument_number=1):
 	endin 
 	""" % (instrument_number,points-1)	
 
-	return csd
+    return csd
 
 def oscillator2(points,instrument_number=2):
-	csd = """
 
-	instr %s
-		kidx 	line 0, p3, %s ; p3 (duration) is in beats, "line" requires seconds. Ok as long as BPM=60
-		kpar1 	table kidx, p5 
-		kpar2 	table kidx, p6 
-		kfreq	= kpar1*100 +100
-		kamp	= kpar2*100 +100
+    csd = """
 
-		a1 	oscil kamp, kfreq, 1  ; Simple oscillator.  
-		out a1  ; Output. 
+    instr %s
+        kidx 	line 0, p3, %s ; p3 (duration) is in beats, "line" requires seconds. Ok as long as BPM=60
+        kpar1 	table kidx, p5 
+        kpar2 	table kidx, p6 
+        kfreq	= kpar1*100 +100
+        kamp	= kpar2*100 +100
 
-		; printks "kidx: %%d\\n",  1, kidx
-		; printks "kpar1: %%f\\n", 1, kpar2
-		; printks "kpar2: %%f\\n", 1, kpar3
-		; printks "kfreq: %%d\\n", 1, kfreq
-	endin 
-	""" % (instrument_number,points-1)	
+        a1 	oscil kamp, kfreq, 1  ; Simple oscillator.  
+        out a1  ; Output. 
 
-        return csd
+        ; printks "kidx: %%d\\n",  1, kidx
+        ; printks "kpar1: %%f\\n", 1, kpar2
+        ; printks "kpar2: %%f\\n", 1, kpar3
+        ; printks "kfreq: %%d\\n", 1, kfreq
+    endin 
+	""" % (instrument_number,points-1)
+
+    return csd
 
 def oscillator_dual(points,instrument_number=3):
-	csd = """
+
+    csd = """
 
 	instr %s
 		kidx 	line 0, p3, %s ; p3 (duration) is in beats, "line" requires seconds. Ok as long as BPM=60
@@ -93,14 +96,14 @@ def oscillator_dual(points,instrument_number=3):
 		; printks "kfreq: %%d\\n", 1, kfreq
 	endin 
 	""" % (instrument_number,points-1)	
-        return csd
+    return csd
 
 
 
 def wgpluck2(instrument_number=5,iplk=0.75, krefl=0.85):
-	""" Parameters p4: amp, p5: cps """
+    """ Parameters p4: amp, p5: cps """
 
-	csd = """
+    csd = """
 	instr %s
   		iplk = %s
   		kamp = p4
@@ -111,10 +114,9 @@ def wgpluck2(instrument_number=5,iplk=0.75, krefl=0.85):
   		apluck wgpluck2 iplk, kamp, icps, kpick, krefl
 
   		out apluck
-	endin
-	""" % (instrument_number,iplk,krefl)
+	endin """ % (instrument_number,iplk,krefl)
 
-	return csd
+    return csd
 
 def wgpluck(instrument_number=4, function_number=4, iplk=0):
     """ Parameters p4:amp, p5:cps """
@@ -140,4 +142,28 @@ def wgpluck(instrument_number=4, function_number=4, iplk=0):
     """ % (instrument_number, function_number)
 
     return csd
+
+def partikkel(instrument_number=5):
+
+    csd = """
+
+           ; Requires table like "f 1 0 16384 10 1"
+
+           instr %s
+               icps = cpspch(p5)
+               iamp = p4
+               kpick = 0.5
+               iplk = 0
+               idamp = 10
+               ifilt = 1000
+
+               axcite oscil 1, 1, %s ; kamp, kfreq, function number
+               apluck wgpluck icps, iamp, kpick, iplk, idamp, ifilt, axcite
+
+               out apluck
+           endin
+           """ % (instrument_number, function_number)
+
+    return csd
+
 

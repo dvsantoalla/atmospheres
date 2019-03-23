@@ -14,13 +14,13 @@ from csound import orchestra,output
 
 class TestNotes(unittest.TestCase):
 
-	def notest_notes_following_spline(self):
+	def test_notes_following_spline(self):
 		""" Generate a stream of notes from a extended scale
 		that follow the movement of one or several parameters"""
-		gen.get_notes_following_spline(get('Madrid',cc.T),cc.T,cnc.SCALES["major"], n.find("D"))
+		gen.get_notes_following_spline(get(cc.T, location='Madrid'),cc.T,cnc.SCALES["major"], n.find("D"))
 
 
-	def notest_transpose(self):
+	def test_transpose(self):
 
 		for i in (n.find("D"), n.find("B")):
 			c = n.find("A").clone()
@@ -42,16 +42,16 @@ class TestNotes(unittest.TestCase):
 			for j in major:
 				stream.append(t.extend([j.clone()],i))
 
-	        log.debug(stream)
+			log.debug(stream)
 
 
 	def test_shepard(self):
 
 		scale = cnc.SCALES["major"]
-                for n in scale:
-                    n.octave += 2
+		for n in scale:
+			n.octave += 2
 
-		notes =  shep.generate_list(scale,length=30,levels=10)
+		notes = shep.generate_list(scale,length=30,levels=10)
 		log.debug("Notes: %s " % (notes))
 
 		step = 0.25
