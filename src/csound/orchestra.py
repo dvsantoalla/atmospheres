@@ -31,6 +31,43 @@ def basic_wave(instrument_number=1, function_number=1):
         """ % (instrument_number, function_number)
         return csd
 
+
+def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1, modulating_function_number=2,
+                         seq_length=7, table_length=16384):
+    """
+    Requires a function f function_number defining the waveform, eg
+        f1 0 16384 10 1                                          ; Sine
+        f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth
+        f3 0 16384 10 1 0   0.3 0    0.2 0     0.14 0     .111   ; Square
+        f4 0 16384 10 1 1   1   1    0.7 0.5   0.3  0.1          ; Pulse
+
+    Also requires a modulating function number, eg
+
+        f2 0 16384 20 2 1 ; Hanning window
+
+    Parameter 'amp' (p4) is going to represent the index to this function window
+
+    """
+
+    csd = """
+
+        instr %s
+            
+            printks "p4 (index) %%d \\n", 1, p4 
+            printks "p5 (pitch) %%d \\n", 1, p5
+
+            iidx = ( p4 / %s )  * %s
+            iamp  table iidx, %s
+            printks "iidx: %%d\\n",  1, iidx
+            printks "iamp: %%d\\n",  1, iamp
+            asig oscil iamp * 5000, cpspch(p5), %s
+            out asig
+            
+        endin
+
+        """ % (instrument_number, seq_length, table_length, modulating_function_number, oscillator_function_number)
+    return csd
+
 def oscillator1(points,instrument_number=1):
 
     csd = """
