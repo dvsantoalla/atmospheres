@@ -1,13 +1,11 @@
 import unittest
 import logging as log
-from pprint import pprint
 from csound import output,orchestra
 from csound.orchestra import gen08
 from music import concepts as cnc
 from music import generation as gen
 from music import notes as n
 from data import constants as td
-from data import spline as sp
 from data import get
 
 def test_simple_soundwaves(osc=1,duration=30):
@@ -51,7 +49,6 @@ def test_simple_soundwaves(osc=1,duration=30):
 		"i3 0 %s 10000 5 4 ; " % duration,
                 ]
 
-
     score = [	"f1 0 8192 10 1  ; Table containing a sine wave.", 
 		gen08(2,mad2t,number_of_points=points,comment="Weather parameter table 2"),
 		gen08(3,madp,number_of_points=points,comment="Weather parameter table 3",),
@@ -63,11 +60,11 @@ def test_simple_soundwaves(osc=1,duration=30):
     output.write_and_play(output.get_csd([oscillator],score))
 
 
-
 class TestSineWavesPerParameter(unittest.TestCase):
 
     def test_simple_soundwaves(self):
         test_simple_soundwaves(osc=1)
+
 
 class TestSineWaveModulatedInPitchAmplitude(unittest.TestCase):
     """ Play two sine waves, modulated in pitch and amplitude. The first
@@ -140,11 +137,14 @@ class TestRhythms(unittest.TestCase):
     """
     pass
 
+
 class TestSawToothWithFilters(unittest.TestCase):
     pass
 
+
 class TestGranularSynthesis(unittest.TestCase):
     pass
+
 
 class TestDifferentPieceLengths(unittest.TestCase):
     
@@ -157,11 +157,14 @@ class TestDifferentPieceLengths(unittest.TestCase):
     def test_long_one(self):
         test_simple_soundwaves(osc=2,duration=120)
 
+
 class TestShephardTones(unittest.TestCase):
 
     def test_simple_ascending(self):
         pass
+
     def test_simple_descending(self):
         pass
+
     def test_ascending_descending(self):
         pass

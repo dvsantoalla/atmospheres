@@ -2,8 +2,10 @@ import spline
 import logging as log
 import constants as c
 
-def get_oscilation_test_data(startvalue,slope=0,oscilations=10,initial_oscilation_amplitude=1, final_oscilation_amplitude=20,number_of_values=40,interpolated=True):
-    """Get values that go from minimum to maximum, with a given number of oscilations, that increase or decrease linearly in amplitude with every oscilation"""
+def get_oscilation_test_data(startvalue,slope=0,oscilations=10,initial_oscilation_amplitude=1,
+                             final_oscilation_amplitude=20,number_of_values=40,interpolated=True):
+    """Get values that go from minimum to maximum, with a given number of oscilations,
+    that increase or decrease linearly in amplitude with every oscilation"""
 
     values = []
     current_oscilation = initial_oscilation_amplitude
@@ -11,7 +13,8 @@ def get_oscilation_test_data(startvalue,slope=0,oscilations=10,initial_oscilatio
     value = startvalue
 
     for osc in range(0,oscilations):
-        log.debug("osc %s, value %s, oscilation %s, osc growth %s, value slope %s" % (osc, value, current_oscilation, oscilation_growth_factor, slope))
+        log.debug("osc %s, value %s, oscilation %s, osc growth %s, value slope %s" % (osc, value, current_oscilation,
+                                                                                      oscilation_growth_factor, slope))
         values.append(value)
         values.append(value+current_oscilation/2.0)
         values.append(value-current_oscilation/2.0)

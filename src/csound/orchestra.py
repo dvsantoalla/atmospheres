@@ -45,7 +45,8 @@ def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1
 
         f2 0 16384 20 2 1 ; Hanning window
 
-    Parameter 'amp' (p4) is going to represent the index to this function window
+    Parameter 'amp' (p4) is going to represent the index to this function window,
+        relative to the number of notes of the sequence. Eg, if 14 notes, index should be 0-13
 
     """
 
@@ -181,6 +182,8 @@ def wgpluck(instrument_number=4, function_number=4, iplk=0):
     return csd
 
 def partikkel(instrument_number=5):
+
+    # TODO: This is still a copy of wgpluck. Do write an example with partikkel
 
     csd = """
 
