@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fdd552c0-1742-4000-a0fd-5ff4aa4e93c0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tests/shepard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/csound/orchestra.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/csound/orchestra.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/generated.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/generated.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tests/examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/examples.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/notes.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/notes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/shepard.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/shepard.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,18 +15,9 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/csound/orchestra.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="678">
-              <caret line="48" column="94" selection-start-line="48" selection-start-column="94" selection-end-line="48" selection-end-column="94" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tests/notes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="611">
+            <state relative-caret-position="540">
               <caret line="47" selection-start-line="47" selection-end-line="47" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -38,11 +26,25 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tests/shepard.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-462">
-              <caret line="17" column="8" lean-forward="true" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+            <state relative-caret-position="285">
+              <caret line="19" selection-start-line="19" selection-end-line="21" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tests/graphics.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -50,7 +52,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/music/shepard.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-380">
+            <state relative-caret-position="150">
               <caret line="15" column="94" selection-start-line="15" selection-start-column="94" selection-end-line="15" selection-end-column="94" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -63,7 +65,6 @@
         <entry file="file://$PROJECT_DIR$/src/tests/sounds.py">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret lean-forward="true" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -83,17 +84,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/data/generated.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="360">
               <caret line="26" selection-start-line="26" selection-end-line="26" selection-end-column="39" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/tests/examples.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1318">
-              <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
+            <state relative-caret-position="289">
+              <caret line="200" column="8" selection-start-line="200" selection-start-column="8" selection-end-line="200" selection-end-column="8" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -104,7 +105,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/data/plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
+            <state relative-caret-position="420">
               <caret line="31" column="9" selection-start-line="31" selection-start-column="9" selection-end-line="31" selection-end-column="9" />
             </state>
           </provider>
@@ -122,6 +123,11 @@
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>TestSineWaveWithModulatedDetune</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -141,13 +147,13 @@
         <option value="$PROJECT_DIR$/src/music/shepard.py" />
         <option value="$PROJECT_DIR$/src/csound/orchestra.py" />
         <option value="$PROJECT_DIR$/src/data/generated.py" />
-        <option value="$PROJECT_DIR$/src/tests/shepard.py" />
         <option value="$PROJECT_DIR$/src/tests/notes.py" />
+        <option value="$PROJECT_DIR$/src/tests/shepard.py" />
         <option value="$PROJECT_DIR$/src/tests/examples.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1440" />
     <option name="height" value="900" />
   </component>
@@ -156,6 +162,34 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/PycharmProjects/atmospheres" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/PycharmProjects/atmospheres" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/PycharmProjects/atmospheres" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="music" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/PycharmProjects/atmospheres" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="tests" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,55 +201,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="csound" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="music" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="studios" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="atmospheres" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="tests" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="PyFindUsagesOptions">
@@ -239,7 +228,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test examples">
+  <component name="RunManager" selected="Python.test examples Shepard Tones">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="atmospheres" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -261,20 +250,41 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="shepard" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="test examples Modulated Detune" type="PythonConfigurationType" factoryName="Python">
       <module name="atmospheres" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="$USER_HOME$/Applications/miniconda2/envs/atmospheres/bin/python" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/music/shepard.py" />
-      <option name="PARAMETERS" value="--help" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="-t tests.examples.TestSineWaveWithModulatedDetune" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test examples Shepard Tones" type="PythonConfigurationType" factoryName="Python">
+      <module name="atmospheres" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="-t tests.examples.TestShepardTones" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -345,6 +355,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="tests shepard" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="atmospheres" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="-t tests.shepard" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Unittests in notes.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="atmospheres" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -362,13 +393,15 @@
     <list>
       <item itemvalue="Python.test notes" />
       <item itemvalue="Python.test examples" />
+      <item itemvalue="Python.test examples Modulated Detune" />
+      <item itemvalue="Python.test examples Shepard Tones" />
       <item itemvalue="Python.test sounds" />
-      <item itemvalue="Python.shepard" />
+      <item itemvalue="Python.tests shepard" />
       <item itemvalue="Python tests.Unittests in notes.py" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.shepard" />
+        <item itemvalue="Python.tests shepard" />
         <item itemvalue="Python tests.Unittests in notes.py" />
       </list>
     </recent_temporary>
@@ -398,7 +431,14 @@
       <option name="project" value="LOCAL" />
       <updated>1553440040750</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Some small adjustments">
+      <created>1553724399801</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1553724399801</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -408,9 +448,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.24242425" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.24242425" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="0" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" weight="0.32937685" />
@@ -418,7 +459,7 @@
       <window_info anchor="bottom" id="Message" order="3" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" order="5" />
-      <window_info anchor="bottom" id="Run" order="6" visible="true" weight="0.23614457" />
+      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.23614457" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
@@ -431,7 +472,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="- Minor reformattings&#10;- Adding the ATMOSPHERE_DATADIR environment variable&#10;to point to an alternative data directory (normally kept&#10;inside the non-public project &quot;atmospheres-misc&quot;" />
     <MESSAGE value="Created another version of the Shepard using a Hanning window function for the amplitudes. It does sound smoother to me than the one based in the raised cosine." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created another version of the Shepard using a Hanning window function for the amplitudes. It does sound smoother to me than the one based in the raised cosine." />
+    <MESSAGE value="Some small adjustments" />
+    <option name="LAST_COMMIT_MESSAGE" value="Some small adjustments" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main.py">
@@ -513,11 +555,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/tests/studio.py">
+    <entry file="file://$PROJECT_DIR$/src/csound/orchestra.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="720">
+          <caret line="48" column="94" selection-start-line="48" selection-start-column="94" selection-end-line="48" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tests/notes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="47" selection-start-line="47" selection-end-line="47" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/music/shepard.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="15" column="94" selection-start-line="15" selection-start-column="94" selection-end-line="15" selection-end-column="94" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -525,17 +585,9 @@
     <entry file="file://$PROJECT_DIR$/src/tests/sounds.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret lean-forward="true" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/csound/orchestra.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="48" column="94" selection-start-line="48" selection-start-column="94" selection-end-line="48" selection-end-column="94" />
         </state>
       </provider>
     </entry>
@@ -546,44 +598,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/generated.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="26" selection-start-line="26" selection-end-line="26" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/data/plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
+        <state relative-caret-position="420">
           <caret line="31" column="9" selection-start-line="31" selection-start-column="9" selection-end-line="31" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/tests/notes.py">
+    <entry file="file://$PROJECT_DIR$/src/tests/studio.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="611">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
+        <state>
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/generated.py">
+    <entry file="file://$PROJECT_DIR$/src/tests/graphics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="26" selection-start-line="26" selection-end-line="26" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/music/shepard.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-380">
-          <caret line="15" column="94" selection-start-line="15" selection-start-column="94" selection-end-line="15" selection-end-column="94" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tests/examples.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1318">
-          <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
+        <state>
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
@@ -592,8 +632,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tests/shepard.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-462">
-          <caret line="17" column="8" lean-forward="true" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+        <state relative-caret-position="285">
+          <caret line="19" selection-start-line="19" selection-end-line="21" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tests/examples.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="200" column="8" selection-start-line="200" selection-start-column="8" selection-end-line="200" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

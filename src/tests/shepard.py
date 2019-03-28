@@ -1,13 +1,6 @@
 import unittest
 import logging as log
-from pprint import pprint
-from data import constants as cc
-from data import get
-from data import spline as s
-from music import notes as n
-from music import transpose as t
 from music import concepts as cnc
-from music import generation as gen
 from music import shepard as shep
 from csound import orchestra,output
 
@@ -19,7 +12,7 @@ class TestShepard(unittest.TestCase):
 
         scale = cnc.SCALES["major"]
         for n in scale:
-            n.octave += 2
+            n.octave += 1
 
         notes = shep.generate_list(scale,length=30,levels=10)
         log.debug("Notes: %s " % (notes))
@@ -37,8 +30,6 @@ class TestShepard(unittest.TestCase):
                 score.append("i1 %s %s %s %s %s  ; %s " % (time, duration, amp*5000, pitch, note))
             time += step
 
-        #pluck = orchestra.wgpluck2(instrument_number=1,krefl=0.95)
-        #pluck = orchestra.wgpluck(instrument_number=1)
         score.insert(0,"f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth")
         score.insert(0,"f 1 0 16384 10 1")
         pluck = orchestra.basic_wave(instrument_number=1)
@@ -60,7 +51,7 @@ class TestShepard(unittest.TestCase):
         log.debug("Testing Hanning Shepard with a cycle (following Hanning function) length of %s" % (seq_length))
 
         for n in scale:
-            n.octave += 2
+            n.octave += 1
 
         notes = shep.generate_list(scale, length=length, levels=levels, give_index_instead_of_amplitudes=use_index)
         log.debug("Using index to Hanning window as amplitude: %s " % use_index)
