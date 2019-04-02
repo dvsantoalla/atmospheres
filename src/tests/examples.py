@@ -1,5 +1,6 @@
 import unittest
 import logging as log
+import numpy as np
 from csound import output, orchestra
 from csound.orchestra import gen08
 from music import concepts as cnc
@@ -180,38 +181,52 @@ class TestShepardTones(unittest.TestCase):
         score = ["f 1 0 16384 10 1",
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
                  "f3 0 16384 20 2 1 ; Hanning window"]
+
+        score += self.generate_note_sequence(notes,initial_step=initial_step, step_factor=step_factor)
+
+        instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
+                                                     modulating_function_number=3, seq_length=seq_length,
+                                                     use_function_as_envelope=True)
+        output.write_and_play(output.get_csd([instr], score))
+
+
+    def generate_note_sequence(self, notes, initial_step=0.25, step_factor=1, step_list = None):
+
         step = initial_step
         time = 1
-        instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
-                                                     modulating_function_number=3, seq_length=seq_length)
+        sequence = []
 
         for chord in notes:
 
             step = step * step_factor
-            duration = step / 2.0
+            duration = step / 0.5
 
-            score.append("; Writing out %s" % chord)
+            sequence.append("; Writing out %s" % chord)
             for note in chord:
                 pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
-                score.append("i1 %s %s %s %s   ; %s " % (time, duration, note[0], pitch, note))
+                sequence.append("i1 %s %s %s %s   ; %s " % (time, duration, note[0], pitch, note))
             time += step
 
-        output.write_and_play(output.get_csd([instr], score))
+        return sequence
 
-    def test_simple_ascending(self):
+    def notest_simple_ascending(self):
         self.basic_test(step_factor=1)
 
-    def test_simple_descending(self):
+    def notest_simple_descending(self):
         self.basic_test(reverse=True)
 
-    def notest_simple_speeding_up(self):
+    def test_simple_speeding_up(self):
         self.basic_test(step_factor=.995)
 
     def notest_simple_slowing_down(self):
         self.basic_test(step_factor=1.005, initial_step=0.1)
 
     def test_ascending_descending(self):
-        pass
+        h = np.hanning(30)
+        for i in range(1,len(h)):
+            print "%s: %s, diff %s" % (i, h[i], h[i]-h[i-1])
+
 
     def test_speeding_slowing(self):
         pass
+
