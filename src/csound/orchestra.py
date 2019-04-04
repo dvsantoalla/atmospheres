@@ -67,13 +67,13 @@ def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1
 
         instr %s
             
-            printks "p4 (index) %%d \\n", 1, p4 
-            printks "p5 (pitch) %%d \\n", 1, p5
+            ;printks "p4 (index) %%d \\n", 1, p4 
+            ;printks "p5 (pitch) %%d \\n", 1, p5
 
             iidx = ( p4 / %s )  * %s
             iamp  table iidx, %s
-            printks "iidx: %%d\\n",  1, iidx
-            printks "iamp: %%f\\n",  1, iamp
+            ;printks "iidx: %%d\\n",  1, iidx
+            ;printks "iamp: %%f\\n",  1, iamp
     %s
             out asig
             

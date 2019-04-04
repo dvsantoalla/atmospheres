@@ -163,7 +163,8 @@ class TestDifferentPieceLengths(unittest.TestCase):
 
 class TestShepardTones(unittest.TestCase):
 
-    def basic_test(self, step_factor=1, initial_step=0.25, reverse=False):
+    def basic_test(self, step_factor=1, initial_step=0.25, reverse=False,
+                   step_list=None, use_step_derivative = False):
 
         scale = cnc.SCALES["major"]
         levels = 10
@@ -182,7 +183,9 @@ class TestShepardTones(unittest.TestCase):
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
                  "f3 0 16384 20 2 1 ; Hanning window"]
 
-        score += self.generate_note_sequence(notes,initial_step=initial_step, step_factor=step_factor)
+        score += self.generate_note_sequence(notes, initial_step=initial_step,
+                                             step_factor=step_factor, step_list=step_list,
+                                             use_step_derivative=use_step_derivative)
 
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
@@ -190,24 +193,48 @@ class TestShepardTones(unittest.TestCase):
         output.write_and_play(output.get_csd([instr], score))
 
 
-    def generate_note_sequence(self, notes, initial_step=0.25, step_factor=1, step_list = None):
+    def generate_note_sequence(self, notes, initial_step=0.25, step_factor=1, step_list = None, use_step_derivative=False):
 
         step = initial_step
         time = 1
-        sequence = []
+        score = []
+        N = len(notes)
 
-        for chord in notes:
+        log.debug("Length of NOTES %s " % N)
+        if step_list is not None:
+            log.debug("Length of step_list %s" % len(step_list))
 
-            step = step * step_factor
+        count = 0
+        i = 0
+
+        while count < N:
+
+            if not use_step_derivative:
+
+                i = count
+                if step_list is None:
+                    step = step * step_factor
+                else:
+                    step = initial_step * (1.0 - step_list[i]) + 0.1
+
+            else:
+
+                increment = step_list[i] - step_list[i-1] if i > 0 else 0.001
+                step = initial_step * (1 / increment) * .01
+                i += 1 if increment > 0 else -1
+
+            chord = notes[i]
             duration = step / 0.5
 
-            sequence.append("; Writing out %s" % chord)
+            score.append("; Writing out %s" % chord)
             for note in chord:
                 pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
-                sequence.append("i1 %s %s %s %s   ; %s " % (time, duration, note[0], pitch, note))
+                score.append("i1 %s %s %s %s   ; %s " % (time, duration, note[0], pitch, note))
             time += step
 
-        return sequence
+            count += 1
+
+        return score
 
     def notest_simple_ascending(self):
         self.basic_test(step_factor=1)
@@ -215,18 +242,17 @@ class TestShepardTones(unittest.TestCase):
     def notest_simple_descending(self):
         self.basic_test(reverse=True)
 
-    def test_simple_speeding_up(self):
+    def notest_simple_speeding_up(self):
         self.basic_test(step_factor=.995)
 
     def notest_simple_slowing_down(self):
         self.basic_test(step_factor=1.005, initial_step=0.1)
 
-    def test_ascending_descending(self):
-        h = np.hanning(30)
-        for i in range(1,len(h)):
-            print "%s: %s, diff %s" % (i, h[i], h[i]-h[i-1])
+    def test_ascending_descending_hanning(self):
+        h = np.hanning(210)
+        print h
+        self.basic_test(step_list=h, use_step_derivative=True)
 
-
-    def test_speeding_slowing(self):
+    def notest_speeding_slowing(self):
         pass
 
