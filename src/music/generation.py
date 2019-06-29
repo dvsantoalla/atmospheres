@@ -1,7 +1,6 @@
 import logging as log
 import data.constants as cc
 import data.spline as s
-import music.notes as n
 import music.transpose as t
 
 

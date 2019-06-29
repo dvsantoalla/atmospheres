@@ -1,15 +1,11 @@
 import unittest
 import logging as log
-from pprint import pprint
 from data import constants as cc
 from data import get
-from data import spline as s
 from music import notes as n
 from music import transpose as t
 from music import concepts as cnc
 from music import generation as gen
-from music import shepard as shep
-from csound import orchestra,output
 
 
 class TestNotes(unittest.TestCase):
@@ -17,8 +13,7 @@ class TestNotes(unittest.TestCase):
     def test_notes_following_spline(self):
         """ Generate a stream of notes from a extended scale
         that follow the movement of one or several parameters"""
-        gen.get_notes_following_spline(get(cc.T, location='Madrid'),cc.T,cnc.SCALES["major"], n.find("D"))
-
+        gen.get_notes_following_spline(get(cc.T, location='Madrid'), cc.T, cnc.SCALES["major"], n.find("D"))
 
     def test_transpose(self):
 
@@ -26,22 +21,20 @@ class TestNotes(unittest.TestCase):
             c = n.find("A").clone()
             log.debug("=" * 20)
             log.debug("Original %s" % c)
-            t.transpose([c],i)
-            log.debug("Transposed %s sem: %s" % (i,c))
+            t.transpose([c], i)
+            log.debug("Transposed %s sem: %s" % (i, c))
 
-        for i in (n.find("A"),n.find("E"),n.find("C")):
+        for i in (n.find("A"), n.find("E"), n.find("C")):
             c = n.find("B").clone()
             log.debug("=" * 20)
             log.debug("Original %s" % c)
-            t.transpose([c],i)
-            log.debug("Transposed %s sem: %s" % (i,c))
- 
+            t.transpose([c], i)
+            log.debug("Transposed %s sem: %s" % (i, c))
+
         major = cnc.SCALES["major"]
         stream = []
-        for i in range(-3,2):
+        for i in range(-3, 2):
             for j in major:
-                stream.append(t.extend([j.clone()],i))
+                stream.append(t.extend([j.clone()], i))
 
         log.debug(stream)
-
-

@@ -13,6 +13,7 @@ from music import generation as gen
 from music import shepard as shep
 from csound import orchestra,output
 
+
 class Studio01(Studio):
 
     def play(self):

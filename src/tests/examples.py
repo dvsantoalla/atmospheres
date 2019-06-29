@@ -163,8 +163,8 @@ class TestDifferentPieceLengths(unittest.TestCase):
 
 class TestShepardTones(unittest.TestCase):
 
-    def basic_test(self, step_factor=1, initial_step=0.25, reverse=False,
-                   step_list=None, use_step_derivative = False):
+    def basic_test(self, step_factor=1, step_factor_function=None, initial_step=0.25, reverse=False,
+                   step_list=None, use_step_derivative=False):
 
         scale = cnc.SCALES["major"]
         levels = 10
@@ -184,16 +184,16 @@ class TestShepardTones(unittest.TestCase):
                  "f3 0 16384 20 2 1 ; Hanning window"]
 
         score += self.generate_note_sequence(notes, initial_step=initial_step,
-                                             step_factor=step_factor, step_list=step_list,
-                                             use_step_derivative=use_step_derivative)
+                                             step_factor=step_factor, step_factor_function=step_factor_function,
+                                             step_list=step_list, use_step_derivative=use_step_derivative)
 
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
                                                      use_function_as_envelope=True)
         output.write_and_play(output.get_csd([instr], score))
 
-
-    def generate_note_sequence(self, notes, initial_step=0.25, step_factor=1, step_list = None, use_step_derivative=False):
+    def generate_note_sequence(self, notes, initial_step=0.25, step_factor=1, step_factor_function=None,
+                               step_list=None, use_step_derivative=False):
 
         step = initial_step
         time = 1
@@ -209,13 +209,16 @@ class TestShepardTones(unittest.TestCase):
 
         while count < N:
 
-            if not use_step_derivative:
+            if not use_step_derivative and step_factor_function is None:
 
                 i = count
                 if step_list is None:
                     step = step * step_factor
                 else:
                     step = initial_step * (1.0 - step_list[i]) + 0.1
+
+            elif step_factor_function is not None:
+                pass
 
             else:
 
@@ -242,17 +245,20 @@ class TestShepardTones(unittest.TestCase):
     def notest_simple_descending(self):
         self.basic_test(reverse=True)
 
-    def notest_simple_speeding_up(self):
+    def test_simple_speeding_up(self):
         self.basic_test(step_factor=.995)
 
     def notest_simple_slowing_down(self):
         self.basic_test(step_factor=1.005, initial_step=0.1)
 
-    def test_ascending_descending_hanning(self):
+    def notest_ascending_descending_hanning(self):
         h = np.hanning(210)
         print h
         self.basic_test(step_list=h, use_step_derivative=True)
 
     def notest_speeding_slowing(self):
         pass
+
+    def notest_speeding_slowing_following_data(self):
+        data = d.get(cc.T, location='Madrid')
 

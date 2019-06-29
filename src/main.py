@@ -1,9 +1,5 @@
-import sys
-import unittest
 import argparse
-import logging as log
 
-from tests.graphics import *
 from tests.notes import *
 from tests.sounds import *
 
