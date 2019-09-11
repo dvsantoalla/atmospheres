@@ -9,9 +9,10 @@ from music import notes as n
 from music import shepard as shep
 from data import constants as td
 from data import get
+from data import spline as sp
 
 
-def test_simple_soundwaves(osc=1, duration=30):
+def notest_simple_soundwaves(osc=1, duration=30):
     """ Play a sine wave for each of the parameters of Madrid in 2014. Depending on the osc parameter
     1: Play four sine waves following each of 2t, p, w, c
     2: Play two sine waves, modulated in frequency and amplitude, the first by 2t and w, the second by p and c
@@ -65,7 +66,7 @@ def test_simple_soundwaves(osc=1, duration=30):
 
 class TestSineWavesPerParameter(unittest.TestCase):
 
-    def test_simple_soundwaves(self):
+    def notest_simple_soundwaves(self):
         test_simple_soundwaves(osc=1)
 
 
@@ -74,7 +75,7 @@ class TestSineWaveModulatedInPitchAmplitude(unittest.TestCase):
     two parameters modulating pitch and amplitude of the first oscillator 
     and the second two parameters the second oscillator """
 
-    def test_both(self):
+    def notest_both(self):
         test_simple_soundwaves(osc=2)
 
 
@@ -83,7 +84,7 @@ class TestSineWaveWithModulatedDetune(unittest.TestCase):
     will control how much is the second sine wave detuned in relation to the first, creating a "beat" between both.
     We have to see how a parameter should translate into "beat" as closer waves can sound more "unstable" that two further away"""
 
-    def test_modulated_dissonance(self):
+    def notest_modulated_dissonance(self):
         test_simple_soundwaves(osc=3)
 
 
@@ -108,7 +109,7 @@ class TestPlucksInScale(unittest.TestCase):
             score.append("i1 %s 1 30000 %s.%02d" % (i, notes[i].octave, notes[i].semitones))
         output.write_and_play(output.get_csd([plucker], score))
 
-    def test_scale_wgpluck_with_rhythm(self):
+    def notest_scale_wgpluck_with_rhythm(self):
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
         rhythms = gen.get_events_following_spline(get(td.W, location='Madrid'), td.W, cnc.RHYTHM_STABILITY)
 
@@ -151,19 +152,19 @@ class TestGranularSynthesis(unittest.TestCase):
 
 class TestDifferentPieceLengths(unittest.TestCase):
 
-    def test_short_one(self):
+    def notest_short_one(self):
         test_simple_soundwaves(osc=2, duration=10)
 
-    def test_medium_one(self):
+    def notest_medium_one(self):
         test_simple_soundwaves(osc=2, duration=60)
 
-    def test_long_one(self):
+    def notest_long_one(self):
         test_simple_soundwaves(osc=2, duration=120)
 
 
 class TestShepardTones(unittest.TestCase):
 
-    def basic_test(self, step_factor=1, step_factor_function=None, initial_step=0.25, reverse=False,
+    def basic_test(self, step_factor=1, step_function=None, initial_step=0.25, reverse=False,
                    step_list=None, use_step_derivative=False):
 
         scale = cnc.SCALES["major"]
@@ -184,7 +185,7 @@ class TestShepardTones(unittest.TestCase):
                  "f3 0 16384 20 2 1 ; Hanning window"]
 
         score += self.generate_note_sequence(notes, initial_step=initial_step,
-                                             step_factor=step_factor, step_factor_function=step_factor_function,
+                                             fixed_step_factor=step_factor, step_function=step_function,
                                              step_list=step_list, use_step_derivative=use_step_derivative)
 
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
@@ -192,7 +193,7 @@ class TestShepardTones(unittest.TestCase):
                                                      use_function_as_envelope=True)
         output.write_and_play(output.get_csd([instr], score))
 
-    def generate_note_sequence(self, notes, initial_step=0.25, step_factor=1, step_factor_function=None,
+    def generate_note_sequence(self, notes, initial_step=0.25, fixed_step_factor=1, step_function=None,
                                step_list=None, use_step_derivative=False):
 
         step = initial_step
@@ -209,24 +210,50 @@ class TestShepardTones(unittest.TestCase):
 
         while count < N:
 
-            if not use_step_derivative and step_factor_function is None:
+            # Calculate step (ie "gap" between the notes or "speed" of the progression)
+            # Mode is chosen from variables fixed_step_factor, step_list, use_step_derivative
+            # Three working modes
+            # a) Use a constant step factor, that multiplies to the previous step
+            # b) Use a step list, that substracts from the initial step
+            # c) Use a step derivative, that uses the increment between previous and current point values
+            #       This increment is used to calculate speed
 
-                i = count
-                if step_list is None:
-                    step = step * step_factor
-                else:
-                    step = initial_step * (1.0 - step_list[i]) + 0.1
+            i = count
+            if fixed_step_factor is not None and not use_step_derivative and step_list is None:
+                # a)
+                step = step * fixed_step_factor
 
-            elif step_factor_function is not None:
-                pass
+            elif step_list is not None:
+                # b)
+                step = initial_step * (1.0 - step_list[i]) + 0.1
 
-            else:
-
-                increment = step_list[i] - step_list[i-1] if i > 0 else 0.001
+            elif use_step_derivative:
+                # c)
+                increment = step_function(i) - step_function(i-1) if i > 0 else 0.001
                 step = initial_step * (1 / increment) * .01
                 i += 1 if increment > 0 else -1
+                log.info("value %s, increment %s, step %s, i %s" % (step_function(i), increment, step, i))
 
-            chord = notes[i]
+            else:
+                raise ValueError("At least one of 'fixed_step_factor','step_list','step_factor_function' or \
+                                    'use_step_derivative' must be used")
+
+            # Do we use a step function, that calculates what is the next note in the sequence? In this mode
+            # we can forwards or backwards in the sequence
+            # Otherwise we just move to the next note in the sequence
+
+            if step_function is not None:
+                # How many notes are we generating? Length of the progression N
+                # what are the highest and lowest expected values of the function? ??? 0-30
+                # How long is the data, n=40
+                n = 40
+                # Find the index of the data based on the position of "i" in the list of notes
+                # Correspond the escale 0-30 for values into a true position in the notes
+                index = (N - i) / n
+                chord = notes[i]
+            else:
+                chord = notes[i]
+
             duration = step / 0.5
 
             score.append("; Writing out %s" % chord)
@@ -239,13 +266,64 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
+    def generate_note_sequence_from_derivative(self, notes, initial_step=0.25, nvalues=40, value_function=None, value_range=(-10,50)):
+
+        step = initial_step
+        time = 1
+        score = []
+        N = len(notes)
+
+        log.debug("Length of NOTES %s " % N)
+        log.debug("Length of values %s " % nvalues)
+        log.debug("Value range %s " % str(value_range))
+        steps_per_unit = N / (value_range[1] - value_range[0])
+        log.debug("Steps per unit %s " % steps_per_unit)
+
+
+        for ni in range(1, N):
+            i = float(nvalues) * ni / N
+            i0 = float(nvalues) * (ni-1) / N
+            increment = value_function(i) - value_function(i0)
+
+            log.debug("Increment at step %s minus step %s is %s - \t%s = \t%s" %(i, i0, value_function(i), value_function(i0), increment))
+            continue
+
+            # Calculate the point in N where the chord will be generated
+
+
+            if step_function is not None:
+                # How many notes are we generating? Length of the progression N
+                # what are the highest and lowest expected values of the function? ??? 0-30
+                # How long is the data, n=40
+                n = 40
+                # Find the index of the data based on the position of "i" in the list of notes
+                # Correspond the escale 0-30 for values into a true position in the notes
+                index = (N - i) / n
+                chord = notes[i]
+            else:
+                chord = notes[i]
+
+            duration = step / 0.5
+
+            score.append("; Writing out %s" % chord)
+            for note in chord:
+                pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
+                score.append("i1 %s %s %s %s   ; %s " % (time, duration, note[0], pitch, note))
+            time += step
+
+            count += 1
+
+        return score
+
+
+
     def notest_simple_ascending(self):
         self.basic_test(step_factor=1)
 
     def notest_simple_descending(self):
         self.basic_test(reverse=True)
 
-    def test_simple_speeding_up(self):
+    def notest_simple_speeding_up(self):
         self.basic_test(step_factor=.995)
 
     def notest_simple_slowing_down(self):
@@ -259,6 +337,25 @@ class TestShepardTones(unittest.TestCase):
     def notest_speeding_slowing(self):
         pass
 
-    def notest_speeding_slowing_following_data(self):
-        data = d.get(cc.T, location='Madrid')
+    def notest_ascending_descending_following_data(self):
+        data = get(td.T, location='Madrid')
+        print "The number of data points is %s" % len(data)
+        f = sp.generate_spline(data)
+        self.basic_test(step_function=f)
 
+    def test_speeding_slowing_following_data(self):
+        data = get(td.T, location='Madrid')
+        print "The number of data points is %s" % len(data)
+        f = sp.generate_spline(data)
+
+        scale = cnc.SCALES["major"]
+        levels = 10
+        seq_length = len(scale) * (levels + 1)
+        log.debug("Testing Hanning Shepard with a cycle (following Hanning function) length of %s" % (seq_length))
+
+        for n in scale:
+            n.octave += 1
+
+        notes = shep.generate_list(scale, length=30, levels=levels, give_index_instead_of_amplitudes=True)
+
+        self.generate_note_sequence_from_derivative(notes, value_function=f, nvalues=len(data))
