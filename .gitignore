@@ -7,3 +7,5 @@
 *.csd
 *.mp3
 *.wav
+.idea/*
+.idea
