@@ -266,23 +266,24 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def generate_note_sequence_from_derivative(self, notes, initial_step=0.25, nvalues=40, value_function=None, value_range=(-10,50)):
+    def generate_note_sequence_from_derivative(self, notes, initial_step=0.25, number_of_steps=40, value_function=None, value_range=(-10, 50)):
 
         step = initial_step
         time = 1
         score = []
-        N = len(notes)
+        number_of_notes_available = len(notes)
+        value_range_int = value_range[1] - value_range[0]
 
-        log.debug("Length of NOTES %s " % N)
-        log.debug("Length of values %s " % nvalues)
+        log.debug("Length of NOTES %s " % number_of_notes_available)
+        log.debug("Length of values %s " % number_of_notes_to_generate)
         log.debug("Value range %s " % str(value_range))
         steps_per_unit = N / (value_range[1] - value_range[0])
         log.debug("Steps per unit %s " % steps_per_unit)
 
 
-        for ni in range(1, N):
-            i = float(nvalues) * ni / N
-            i0 = float(nvalues) * (ni-1) / N
+        for ni in range(1, number_of_notes_to_generate):
+            i = float(number_of_notes_to_generate) * ni / number_of_notes_available
+            i0 = float(number_of_notes_to_generate) * (ni-1) / N
             increment = value_function(i) - value_function(i0)
 
             log.debug("Increment at step %s minus step %s is %s - \t%s = \t%s" %(i, i0, value_function(i), value_function(i0), increment))
@@ -290,18 +291,8 @@ class TestShepardTones(unittest.TestCase):
 
             # Calculate the point in N where the chord will be generated
 
+            chord = notes[i]
 
-            if step_function is not None:
-                # How many notes are we generating? Length of the progression N
-                # what are the highest and lowest expected values of the function? ??? 0-30
-                # How long is the data, n=40
-                n = 40
-                # Find the index of the data based on the position of "i" in the list of notes
-                # Correspond the escale 0-30 for values into a true position in the notes
-                index = (N - i) / n
-                chord = notes[i]
-            else:
-                chord = notes[i]
 
             duration = step / 0.5
 
