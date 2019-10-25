@@ -266,43 +266,58 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def generate_note_sequence_from_derivative(self, notes, initial_step=0.25, number_of_steps=40, value_function=None, value_range=(-10, 50)):
+    def generate_note_sequence_from_derivative(self, notes, initial_step=5.0, number_of_steps=40, value_function=None, value_range=(-10, 50)):
 
         step = initial_step
-        time = 1
+        local_step = 0
+        time = 0
         score = []
         number_of_notes_available = len(notes)
-        value_range_int = value_range[1] - value_range[0]
+        number_of_notes_to_generate = number_of_steps
 
         log.debug("Length of NOTES %s " % number_of_notes_available)
         log.debug("Length of values %s " % number_of_notes_to_generate)
         log.debug("Value range %s " % str(value_range))
-        steps_per_unit = N / (value_range[1] - value_range[0])
-        log.debug("Steps per unit %s " % steps_per_unit)
+        #steps_per_unit = N / (value_range[1] - value_range[0])
+        #log.debug("Steps per unit %s " % steps_per_unit)
+
+        for ni in range(0, number_of_notes_to_generate-1):
+            value = value_function(ni)  # Value at this point
+            noteindex1 = int((value - value_range[0]) / (value_range[1] - value_range[0]) * number_of_notes_available)
+
+            if ni>0: # Generate all the intermediate notes from the previous note
+                value = value_function(ni-1)
+                noteindex0 = int((value - value_range[0]) / (value_range[1] - value_range[0]) * number_of_notes_available)
+                local_step = step / abs( noteindex1 - noteindex0)
+                log.debug("%s: ** Previous Noteindex %s of %s, value %s, local step %s" %
+                                            (ni, noteindex0, number_of_notes_available, value, local_step))
+                # We got the starting point so now generate everything intermediate
+
+                path = range(noteindex0 + 1, noteindex1) if noteindex0 < noteindex1 \
+                    else range(noteindex0 - 1, noteindex1, -1)
+
+                for iterm in path:
+                    time += local_step
+                    log.debug("%s: ==== Generating intermediate note %s at time %s" % (ni, iterm, time))
+
+                    chord = notes[noteindex0]
+                    score.append("; Writing out intermediate step chord %s" % chord)
+                    for note in chord:
+                        pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
+                        score.append("i1 %s %s %s %s   ; %s " % (time, local_step, note[0], pitch, note))
 
 
-        for ni in range(1, number_of_notes_to_generate):
-            i = float(number_of_notes_to_generate) * ni / number_of_notes_available
-            i0 = float(number_of_notes_to_generate) * (ni-1) / N
-            increment = value_function(i) - value_function(i0)
 
-            log.debug("Increment at step %s minus step %s is %s - \t%s = \t%s" %(i, i0, value_function(i), value_function(i0), increment))
-            continue
+            # Generate the note at this point
+            time += local_step
+            log.debug("%s: ---- Noteindex %s of %s, value %s, time %s" %
+                      (ni, noteindex1, number_of_notes_available, value, time))
 
-            # Calculate the point in N where the chord will be generated
-
-            chord = notes[i]
-
-
-            duration = step / 0.5
-
-            score.append("; Writing out %s" % chord)
+            chord = notes[noteindex1]
+            score.append("; Writing out main step chord %s" % chord)
             for note in chord:
                 pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
-                score.append("i1 %s %s %s %s   ; %s " % (time, duration, note[0], pitch, note))
-            time += step
-
-            count += 1
+                score.append("i1 %s %s %s %s   ; %s " % (time, local_step, note[0], pitch, note))
 
         return score
 
@@ -322,21 +337,22 @@ class TestShepardTones(unittest.TestCase):
 
     def notest_ascending_descending_hanning(self):
         h = np.hanning(210)
-        print h
+        log.debug(h)
         self.basic_test(step_list=h, use_step_derivative=True)
 
     def notest_speeding_slowing(self):
         pass
 
-    def notest_ascending_descending_following_data(self):
+    def test_ascending_descending_following_data(self):
         data = get(td.T, location='Madrid')
-        print "The number of data points is %s" % len(data)
+        log.debug("The number of data points is %s" % len(data))
         f = sp.generate_spline(data)
         self.basic_test(step_function=f)
 
-    def test_speeding_slowing_following_data(self):
+    def notest_speeding_slowing_following_data(self):
+
         data = get(td.T, location='Madrid')
-        print "The number of data points is %s" % len(data)
+        log.debug("The number of data points is %s" % len(data))
         f = sp.generate_spline(data)
 
         scale = cnc.SCALES["major"]
@@ -347,6 +363,14 @@ class TestShepardTones(unittest.TestCase):
         for n in scale:
             n.octave += 1
 
-        notes = shep.generate_list(scale, length=30, levels=levels, give_index_instead_of_amplitudes=True)
+        notes = shep.generate_list(scale, length=30, levels=levels, give_index_instead_of_amplitudes=False)
+        #log.debug("Using list of notes: %s" % str(notes))
+        score = ["f 1 0 16384 10 1",
+                 "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
+                 "f3 0 16384 20 2 1 ; Hanning window"]
+        score += self.generate_note_sequence_from_derivative(notes, value_function=f)
 
-        self.generate_note_sequence_from_derivative(notes, value_function=f, nvalues=len(data))
+        instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
+                                                     modulating_function_number=3, seq_length=seq_length,
+                                                     use_function_as_envelope=True)
+        output.write_and_play(output.get_csd([instr], score))

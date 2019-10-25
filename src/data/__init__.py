@@ -37,6 +37,7 @@ def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", da
 
                 min,max,avg = describe(data)
                 log.debug("Loaded %s values (min:%s, max:%s, avg:%s) from file '%s', parameter:%s, location:%s " % (len(data),min,max,avg,i,par, loc))
+                log.debug("Loaded values are %s " % str(data))
                 return data
 
     log.warn("Cannot find any data at %s for the parameter '%s' and location '%s'. Files found: %s", datadir, parameter, location, files)
