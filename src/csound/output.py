@@ -26,10 +26,9 @@ def get_csd(orchestra,score):
 
 </CsInstruments>
 <CsScore>
+%s	
 
-        %s	
-
-	e
+e
 </CsScore>
 </CsoundSynthesizer>
 """ % (output_file, ("\n").join(orchestra),("\n").join(score))
