@@ -267,7 +267,7 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def generate_note_sequence_from_derivative(self, notes, number_of_steps=40,
+    def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=40,
                                                data_values_available=40, value_function=None, value_range=(-10, 50)):
         inner_step = 0
         time = 0
@@ -422,9 +422,13 @@ class TestShepardTones(unittest.TestCase):
         score = ["f 1 0 16384 10 1",
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
                  "f3 0 16384 20 2 1 ; Hanning window"]
-        score += self.generate_accelerating_note_sequence_from_derivative(notes,
+        #score += self.generate_accelerating_note_sequence_from_derivative(notes,
+        #                                                                  value_function=f,
+        #                                                                  data_values_available=len(data))
+        score += self.generate_accelerating_note_sequence_by_segments(notes,
                                                                           value_function=f,
                                                                           data_values_available=len(data))
+
 
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
