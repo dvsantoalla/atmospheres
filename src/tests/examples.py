@@ -268,7 +268,8 @@ class TestShepardTones(unittest.TestCase):
         return score
 
     def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=40,
-                                               data_values_available=40, value_function=None, value_range=(-10, 50)):
+                                                        data_values_available=40, value_function=None,
+                                                        value_range=(-10, 50)):
         inner_step = 0
         time = 0
         score = []
@@ -292,7 +293,7 @@ class TestShepardTones(unittest.TestCase):
                 chordindex0 = int(
                     (value - value_range[0]) / (value_range[1] - value_range[0]) * number_of_chords_available)
                 log.debug("!!!!! Calculating inner step from os: %s, chordindex1: %s, chordindex0: %s" % (
-                outer_step, chordindex1, chordindex0))
+                    outer_step, chordindex1, chordindex0))
                 inner_step = outer_step / abs(chordindex1 - chordindex0) if chordindex0 != chordindex1 else outer_step
                 log.debug("ni %s: ** Previous Noteindex %s of %s, value %s, local step %s" %
                           (ni, chordindex0, number_of_chords_available, value, inner_step))
@@ -342,15 +343,15 @@ class TestShepardTones(unittest.TestCase):
 
         val_minus_one = get_value_and_chord_index(-initial_step)[0]
         val_zero = get_value_and_chord_index(0)[0]
-        initial_step = 1.0 / 10.0*abs(val_zero - val_minus_one)
+        initial_step = 1.0 / 10.0 * abs(val_zero - val_minus_one)
         step = initial_step
         log.debug("Initial step is %s" % step)
 
         while True:
 
-            log.debug("+"*40)
+            log.debug("+" * 40)
             value0, chordindex0 = get_value_and_chord_index(time)
-            #log.debug("-- time: %s, value0: %s, chordindex0: %s, step: %s" % (time, value0, chordindex0, step))
+            # log.debug("-- time: %s, value0: %s, chordindex0: %s, step: %s" % (time, value0, chordindex0, step))
             time += step
             if time > data_values_available:
                 break
@@ -360,12 +361,12 @@ class TestShepardTones(unittest.TestCase):
             step = .5 if step > .5 else step
             step = .025 if step < .025 else step
 
-            log.debug("@@@@ step at %s is %s" % (time,step))
+            log.debug("@@@@ step at %s is %s" % (time, step))
 
-            #log.debug("++ time: %s, value1: %s, chordindex1: %s, step: %s" % (time, value1, chordindex1, step))
+            # log.debug("++ time: %s, value1: %s, chordindex1: %s, step: %s" % (time, value1, chordindex1, step))
             chord = notes[chordindex1]
 
-            score.append("; ---- Time %s, incr: %s, chord %s" % (time, value1-value0, chord))
+            score.append("; ---- Time %s, incr: %s, chord %s" % (time, value1 - value0, chord))
             for note in chord:
                 pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
                 score.append("i1 %s %s %s %s   ; %s " % (time, step, note[0], pitch, note))
@@ -404,7 +405,7 @@ class TestShepardTones(unittest.TestCase):
         data = map(lambda x: x * 40, np.hanning(40))
         self.run_speeding_slowing_following_data(data)
 
-    def run_speeding_slowing_following_data(self, data):
+    def run_speeding_slowing_following_data(self, data, use_segments=True):
 
         log.debug("The number of data points is %s" % len(data))
         f = sp.generate_spline(data)
@@ -422,13 +423,15 @@ class TestShepardTones(unittest.TestCase):
         score = ["f 1 0 16384 10 1",
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
                  "f3 0 16384 20 2 1 ; Hanning window"]
-        #score += self.generate_accelerating_note_sequence_from_derivative(notes,
-        #                                                                  value_function=f,
-        #                                                                  data_values_available=len(data))
-        score += self.generate_accelerating_note_sequence_by_segments(notes,
+
+        if not use_segments:
+            score += self.generate_accelerating_note_sequence_from_derivative(notes,
+                                                                              value_function=f,
+                                                                              data_values_available=len(data))
+        else:
+            score += self.generate_accelerating_note_sequence_by_segments(notes,
                                                                           value_function=f,
                                                                           data_values_available=len(data))
-
 
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
