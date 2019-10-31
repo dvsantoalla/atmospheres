@@ -270,7 +270,6 @@ class TestShepardTones(unittest.TestCase):
     def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=40,
                                                         data_values_available=40, value_function=None,
                                                         value_range=(-10, 50)):
-        inner_step = 0
         time = 0
         score = []
         number_of_chords_available = len(notes)
@@ -283,44 +282,104 @@ class TestShepardTones(unittest.TestCase):
         outer_step = data_values_available / float(number_of_notes_to_generate)
         log.debug("Outer step is %s" % outer_step)
 
+        def get_value_and_chord_index(idx):
+            val = value_function(idx)  # Value at this point
+            chordidx = get_chordidx_from_value(val)
+            return val, chordidx
+
+        def get_chordidx_from_value(val):
+            return int((val - value_range[0]) / (value_range[1] - value_range[0]) * number_of_chords_available)
+
         for ni in np.arange(0, data_values_available - outer_step, outer_step):
-            value = value_function(ni)  # Value at this point
-            chordindex1 = int((value - value_range[0]) / (value_range[1] - value_range[0]) * number_of_chords_available)
-            log.debug("ni: %s, value: %s, range: %s, chordindex1: %s" % (ni, value, value_range, chordindex1))
 
-            if ni > 0:  # Generate all the intermediate notes from the previous note
-                value = value_function(ni - outer_step)
-                chordindex0 = int(
-                    (value - value_range[0]) / (value_range[1] - value_range[0]) * number_of_chords_available)
-                log.debug("!!!!! Calculating inner step from os: %s, chordindex1: %s, chordindex0: %s" % (
-                    outer_step, chordindex1, chordindex0))
-                inner_step = outer_step / abs(chordindex1 - chordindex0) if chordindex0 != chordindex1 else outer_step
-                log.debug("ni %s: ** Previous Noteindex %s of %s, value %s, local step %s" %
-                          (ni, chordindex0, number_of_chords_available, value, inner_step))
+            value0, chordindex0 = get_value_and_chord_index(ni)
 
-                path = range(chordindex0 + 1, chordindex1) if chordindex0 < chordindex1 \
-                    else range(chordindex0 - 1, chordindex1, -1)
+            log.debug("ni0: %s, value: %s, chordindex0: %s" % (ni, value0, chordindex0))
 
-                for iterm in path:
-                    time += inner_step
-                    log.debug("ni %s: ==== Generating intermediate note %s at time %s" % (ni, iterm, time))
+            value1, chordindex1 = get_value_and_chord_index(ni + outer_step)
+            log.debug("n(i+1): %s, value: %s, chordindex1: %s" % (ni + outer_step, value1, chordindex1))
+            # log.debug("!!!!! Calculating inner step from outer: %s, chordindex0: %s to chordindex1: %s" % (
+            #     outer_step, chordindex0, chordindex1))
 
-                    chord = notes[iterm]
-                    score.append("; ==== Intermediate time %s chord %s" % (time, chord))
-                    for note in chord:
-                        pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
-                        score.append("i1 %s %s %s %s   ; %s " % (time, inner_step, note[0], pitch, note))
+            ## TODO: Now this bit, instead of being linear, should also use
+            ## TODO:  - Gap length based on the interpolating function increases, no "inner_step"
+            ## TODO:  - The number of gaps should be based in the different value of origin vs dest value
+
+            valuegap = abs(value1 - value0)
+            indexgap = outer_step
+
+            ngapvals = int(valuegap * 10)
+            ngapvals = 1 if ngapvals == 0 else ngapvals
+            gapsize = indexgap / ngapvals
+            log.debug("Found a gap between f(%s)-f(%s) of %s, divided into %s segments of size %s" %
+                      (ni + outer_step, ni, valuegap, ngapvals, gapsize))
+            nii = ni
+            segmentdiff = 0
+            absaccumdiff = 0
+            notes_vals = []
+
+
+            for ngap in np.arange(0, ngapvals):  # Every gap
+                # Have to map the increment in value to gap length
+                intval0 = value_function(nii)
+                intval1 = value_function(nii + gapsize)
+                nii += gapsize  # Move the index for this gap
+                diff = intval1 - intval0
+                absaccumdiff += abs(diff)
+                segmentdiff += diff
+                chordidx = get_chordidx_from_value(intval1)
+                log.debug("gap %s: Inner diff (f(%s)-f(%s)) is %s" % (ngap, nii, nii - gapsize, diff))
+                notes_vals.append((nii,diff,chordidx))
+
+            log.debug("The segment accum diff is %s, absolute accum diff %s,  value gap is %s, error %s "
+                                                % (segmentdiff, absaccumdiff, valuegap, segmentdiff - valuegap))
+            t = time
+            for chordval in notes_vals:
+                chordidx = chordval[2]
+                diff = chordval[1]
+                duration = abs(diff*outer_step)/absaccumdiff #The duration should be the proportion of this diff from the total accumulated diff
+                chord = notes[chordidx]
+                mesg = "; ==== Intermediate time %s, duration %s, chord %s" % (t, duration, chord)
+                log.debug(mesg)
+                score.append(mesg)
+                for note in chord:
+                    amp = note[0]
+                    pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
+                    score.append("i1 %s %s %s %s \t; %s " % (t, duration, amp, pitch, note))
+                t += duration
+
+
+
+
+
+            # inner_step = outer_step / abs(chordindex1 - chordindex0) if chordindex0 != chordindex1 else outer_step
+            # log.debug("ni %s: ** Previous Noteindex %s of %s, value %s, local step %s" %
+            #          (ni, chordindex0, number_of_chords_available, value0, inner_step))
+
+            # path = range(chordindex0 + 1, chordindex1) if chordindex0 < chordindex1 \
+            #    else range(chordindex0 - 1, chordindex1, -1)
+
+            # for iterm in path:
+            #     time += inner_step
+            #     log.debug("ni %s: ==== Generating intermediate note %s at time %s" % (ni, iterm, time))
+            #
+            #     chord = notes[iterm]
+            #     score.append("; ==== Intermediate time %s chord %s" % (time, chord))
+            #     for note in chord:
+            #         pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
+            #         score.append("i1 %s %s %s %s   ; %s " % (time, inner_step, note[0], pitch, note))
 
             # Generate the note at this point
-            time += inner_step
-            log.debug("%s: ---- Noteindex %s of %s, value %s, time %s" %
-                      (ni, chordindex1, number_of_chords_available, value, time))
+            time += outer_step
 
-            chord = notes[chordindex1]
-            score.append("; ---- Step %s chord %s" % (ni, chord))
-            for note in chord:
-                pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
-                score.append("i1 %s %s %s %s   ; %s " % (time, inner_step, note[0], pitch, note))
+            # log.debug("%s: ---- Noteindex %s of %s, value %s, time %s" %
+            #           (ni, chordindex1, number_of_chords_available, value1, time))
+            #
+            # chord = notes[chordindex1]
+            # score.append("; ---- Step %s chord %s" % (ni, chord))
+            # for note in chord:
+            #     pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
+            #     score.append("i1 %s %s %s %s   ; %s " % (time, inner_step, note[0], pitch, note))
 
         return score
 
@@ -400,8 +459,8 @@ class TestShepardTones(unittest.TestCase):
         self.basic_test(step_function=f)
 
     def test_speeding_slowing_following_data(self):
-        data = get(td.T, location='Madrid')
-        self.run_speeding_slowing_following_data(data)
+        # data = get(td.T, location='Madrid')
+        # self.run_speeding_slowing_following_data(data)
         data = map(lambda x: x * 40, np.hanning(40))
         self.run_speeding_slowing_following_data(data)
 
