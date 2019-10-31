@@ -267,7 +267,7 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=40,
+    def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=80,
                                                         data_values_available=40, value_function=None,
                                                         value_range=(-10, 50)):
         time = 0
@@ -337,7 +337,11 @@ class TestShepardTones(unittest.TestCase):
             for chordval in notes_vals:
                 chordidx = chordval[2]
                 diff = chordval[1]
-                duration = abs(diff*outer_step)/absaccumdiff #The duration should be the proportion of this diff from the total accumulated diff
+                log.debug("Diff is %s, absaccumdim is %s" % (diff, absaccumdiff))
+                # The duration should be the proportion of this diff from the total accumulated diff
+                duration = abs(diff*outer_step)/absaccumdiff if diff != 0 and absaccumdiff != 0 else outer_step
+                assert not np.isnan(duration)
+
                 chord = notes[chordidx]
                 mesg = "; ==== Intermediate time %s, duration %s, chord %s" % (t, duration, chord)
                 log.debug(mesg)
@@ -459,8 +463,8 @@ class TestShepardTones(unittest.TestCase):
         self.basic_test(step_function=f)
 
     def test_speeding_slowing_following_data(self):
-        # data = get(td.T, location='Madrid')
-        # self.run_speeding_slowing_following_data(data)
+        data = get(td.T, location='Madrid')
+        self.run_speeding_slowing_following_data(data)
         data = map(lambda x: x * 40, np.hanning(40))
         self.run_speeding_slowing_following_data(data)
 
