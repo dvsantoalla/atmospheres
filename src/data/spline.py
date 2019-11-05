@@ -11,7 +11,7 @@ def generate_spline(yvals, start=0, end=None, step=1):
     Create a function that interpolates all yvalues
     step is the number of xvalues per yvalue, default is one
     """
-
+    #log.debug(yvals)
     if end is None:
         end = len(yvals)
     xvals = [x * step for x in range(0, end)]

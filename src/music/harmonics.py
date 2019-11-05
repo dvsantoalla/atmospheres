@@ -4,7 +4,6 @@
 
 import numpy as np
 
-
 def generate_notes_from_harmonic_series(fundamental=110):
 
     equal = []
@@ -13,9 +12,9 @@ def generate_notes_from_harmonic_series(fundamental=110):
     for i in range(0, num_harmonics):
         harmonics.append(fundamental * (i + 1))
 
-    print harmonics
+    #print harmonics
     octaves = np.sqrt(num_harmonics)
-    print "Generated %s octaves of harmonics" % octaves
+    #print "Generated %s octaves of harmonics" % octaves
 
     # scalestep = 100 / 12.0
     base = np.longdouble(2.0)
@@ -24,9 +23,9 @@ def generate_notes_from_harmonic_series(fundamental=110):
     # exponent = 1.0/12.0
     scalefactor = base ** exponent
 
-    print type(base), base
-    print type(exponent), exponent
-    print type(scalefactor), scalefactor
+    #print type(base), base
+    #print type(exponent), exponent
+    #print type(scalefactor), scalefactor
 
     for octave in range(0, int(octaves)):
         scale = []
@@ -34,12 +33,10 @@ def generate_notes_from_harmonic_series(fundamental=110):
             scale.append(fundamental * (2 ** octave) * (scalefactor ** i))
         equal.append(scale)
 
-    print equal
-
     nharm = 1
     notes = []
     for h in harmonics:
-        print "Looking up (%s) %s" % (nharm, h)
+        #print "Looking up (%s) %s" % (nharm, h)
         diff = np.longdouble(999999.0)
         tdiff = 0
         octave = 0
@@ -55,13 +52,8 @@ def generate_notes_from_harmonic_series(fundamental=110):
                     diff = localdiff
                     tdiff = equal[oidx][nidx] - h
 
-        print "Closest value (diff %s) is %s, octave %s, note %s" % (tdiff, equal[octave][note], octave, note)
+        #print "Closest value (diff %s) is %s, octave %s, note %s" % (tdiff, equal[octave][note], octave, note)
         notes.append((octave,note))
         nharm += 1
 
-
-    print notes
-
-
-
-generate_notes_from_harmonic_series()
+    return notes

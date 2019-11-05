@@ -2,12 +2,14 @@ import sys
 import unittest
 import logging as log
 import numpy as np
+import scipy.optimize as opt
 from csound import output, orchestra
 from csound.orchestra import gen08
 from music import concepts as cnc
 from music import generation as gen
 from music import notes as n
 from music import shepard as shep
+from music import harmonics as harm
 from data import constants as td
 from data import get
 from data import spline as sp
@@ -63,6 +65,27 @@ def notest_simple_soundwaves(osc=1, duration=30):
     score += events
 
     output.write_and_play(output.get_csd([oscillator], score))
+
+
+class TestHarmonics(unittest.TestCase):
+
+    def test_harmonics(self):
+        data = get(td.T, location='Madrid')
+        rng = [0, 40]
+        harmonics = harm.generate_notes_from_harmonic_series()
+        cut_points = []
+
+        log.debug("The number of data points is %s, number of harmonics is %s" % (len(data), len(harmonics)))
+        step = (rng[1]-rng[0]) / float(len(harmonics))
+        for i in np.arange(rng[0], rng[1], step):
+            log.debug("Getting roots for step %s" % i)
+            f = sp.generate_spline([x - i for x in data])
+            cut_points.append((i, f.roots()))
+
+        log.debug(cut_points)
+
+
+
 
 
 class TestSineWavesPerParameter(unittest.TestCase):
@@ -267,7 +290,7 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=80,
+    def generate_accelerating_note_sequence_by_segments(self, notes, number_of_steps=120,
                                                         data_values_available=40, value_function=None,
                                                         value_range=(-10, 50)):
         time = 0
@@ -462,7 +485,7 @@ class TestShepardTones(unittest.TestCase):
         f = sp.generate_spline(data)
         self.basic_test(step_function=f)
 
-    def test_speeding_slowing_following_data(self):
+    def notest_speeding_slowing_following_data(self):
         data = get(td.T, location='Madrid')
         self.run_speeding_slowing_following_data(data)
         data = map(lambda x: x * 40, np.hanning(40))
