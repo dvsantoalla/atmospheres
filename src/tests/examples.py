@@ -2,6 +2,7 @@ import sys
 import unittest
 import logging as log
 import numpy as np
+import data.plot as plt
 import scipy.optimize as opt
 from csound import output, orchestra
 from csound.orchestra import gen08
@@ -69,22 +70,51 @@ def notest_simple_soundwaves(osc=1, duration=30):
 
 class TestHarmonics(unittest.TestCase):
 
-    def test_harmonics(self):
+    def test_harmonics(self, step=1):
         data = get(td.T, location='Madrid')
+        end_of_piece = len(data) * step
         rng = [0, 40]
         harmonics = harm.generate_notes_from_harmonic_series()
-        cut_points = []
+        notes_per_harmonic = []
+        ylines = [0]
 
         log.debug("The number of data points is %s, number of harmonics is %s" % (len(data), len(harmonics)))
-        step = (rng[1]-rng[0]) / float(len(harmonics))
-        for i in np.arange(rng[0], rng[1], step):
-            log.debug("Getting roots for step %s" % i)
-            f = sp.generate_spline([x - i for x in data])
-            cut_points.append((i, f.roots()))
+        harm_step = (rng[1]-rng[0]) / float(len(harmonics))
+        for i in np.arange(rng[0], rng[1], harm_step):
+            #log.debug("Getting roots for step %s" % i)
+            #ylines.append(i)
+            f = sp.generate_spline([x - i for x in data], step=1)
+            d = f.derivative()
+            roots = f.roots()
+            values = [(x, d(x)) for x in roots]
+            notes_per_harmonic.append((i, values))
+            #log.debug("For level %s, roots %s" % (i, values))
 
-        log.debug(cut_points)
+            p = plt.plot_test_multi([[x - i for x in data]], additional_ys=ylines)
 
+        bottom = True
+        harm_idx = 0
+        for n in notes_per_harmonic:
+            prev_cut_x = 0
+            log.debug("Generating notes for harmonic at 'y' value %s, note %s" % (n[0], harmonics[harm_idx]))
+            cuts = n[1]
+            if len(cuts) == 0 and bottom:
+                log.debug("** Generating full note, for all the duration of the piece, still below the values")
+            else:
+                bottom = False
+                for cut, derivative in cuts:
+                    if derivative >= 0:
+                        prev_cut_x = cut
+                    else:
+                        log.debug("** (%s) from %s to %s, length: %s" % (harmonics[harm_idx], prev_cut_x, cut, cut - prev_cut_x ))
 
+                # if last derivative is positive, generate harmonic from there till the end.
+                if len(cuts) > 0:
+                    cut, derivative = cuts[-1]
+                    if derivative >= 0:
+                        log.debug("** (%s) from %s to %s, length: %s" % (harmonics[harm_idx], cut, end_of_piece, end_of_piece - cut))
+
+            harm_idx += 1
 
 
 

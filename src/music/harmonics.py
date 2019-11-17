@@ -53,7 +53,7 @@ def generate_notes_from_harmonic_series(fundamental=110):
                     tdiff = equal[oidx][nidx] - h
 
         #print "Closest value (diff %s) is %s, octave %s, note %s" % (tdiff, equal[octave][note], octave, note)
-        notes.append((octave,note))
+        notes.append((octave, note))
         nharm += 1
 
     return notes
