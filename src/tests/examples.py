@@ -129,6 +129,7 @@ class TestHarmonics(unittest.TestCase):
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=end_of_piece,
                                                      use_function_as_envelope=True)
+        plt.plot_score(score)
         output.write_and_play(output.get_csd([instr], score))
 
 
@@ -525,7 +526,7 @@ class TestShepardTones(unittest.TestCase):
         self.basic_test(step_function=f)
 
     def notest_speeding_slowing_following_data(self):
-        data = get(td.T, location='Madrid')
+        data = get(td.W, location='Madrid')
         self.run_speeding_slowing_following_data(data)
         data = map(lambda x: x * 40, np.hanning(40))
         self.run_speeding_slowing_following_data(data)
@@ -561,4 +562,5 @@ class TestShepardTones(unittest.TestCase):
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
                                                      use_function_as_envelope=True)
+        plt.plot_score(score)
         output.write_and_play(output.get_csd([instr], score))

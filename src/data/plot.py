@@ -27,6 +27,30 @@ def plot_test_multi(datasets, step=1, file=None, additional_ys=[], show=True):
         return plt
 
 
+def plot_score(score):
+
+    data = []
+    for line in score:
+        if line.strip().startswith("i"):
+            bits = line.split()
+            log.debug(bits)
+            start = float(bits[1])
+            duration = float(bits[2])
+            amplitude = float(bits[3])
+            note = bits[4].split(".")
+            noteval = int(note[0])*12 + int(note[1])
+
+            data.append((start,start+duration))
+            data.append((noteval,noteval))
+            #data.append("r") # follow amplitude?
+
+
+    plt.plot(*data, linewidth=1)
+    plt.show()
+
+
+
+
 def test():
     x = [x * 6 for x in range(0, 10 * 4)]
     s1 = generate_spline([random.random() * 10 for i in x], step=6)
