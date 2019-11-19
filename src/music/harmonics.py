@@ -4,7 +4,7 @@
 
 import numpy as np
 
-def generate_notes_from_harmonic_series(fundamental=110):
+def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
 
     equal = []
     harmonics = []
@@ -56,4 +56,5 @@ def generate_notes_from_harmonic_series(fundamental=110):
         notes.append((octave, note))
         nharm += 1
 
+    notes = [(x[0]+transpose_octaves, x[1]) for x in notes]
     return notes

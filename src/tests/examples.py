@@ -74,48 +74,62 @@ class TestHarmonics(unittest.TestCase):
         data = get(td.T, location='Madrid')
         end_of_piece = len(data) * step
         rng = [0, 40]
-        harmonics = harm.generate_notes_from_harmonic_series()
+        harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
+        log.debug("Harmonics are %s" % harmonics)
         notes_per_harmonic = []
         ylines = [0]
 
         log.debug("The number of data points is %s, number of harmonics is %s" % (len(data), len(harmonics)))
-        harm_step = (rng[1]-rng[0]) / float(len(harmonics))
+        harm_step = (rng[1] - rng[0]) / float(len(harmonics))
         for i in np.arange(rng[0], rng[1], harm_step):
-            #log.debug("Getting roots for step %s" % i)
-            #ylines.append(i)
+            # log.debug("Getting roots for step %s" % i)
+            # ylines.append(i)
             f = sp.generate_spline([x - i for x in data], step=1)
             d = f.derivative()
             roots = f.roots()
             values = [(x, d(x)) for x in roots]
             notes_per_harmonic.append((i, values))
-            #log.debug("For level %s, roots %s" % (i, values))
+            # log.debug("For level %s, roots %s" % (i, values))
+            #p = plt.plot_test_multi([[x - i for x in data]], additional_ys=ylines)
 
-            p = plt.plot_test_multi([[x - i for x in data]], additional_ys=ylines)
+        score = ["f 1 0 16384 10 1 ; Sine wave",
+                 "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
+                 "f3 0 16384 20 2 1 ; Hanning window"]
 
         bottom = True
         harm_idx = 0
         for n in notes_per_harmonic:
             prev_cut_x = 0
-            log.debug("Generating notes for harmonic at 'y' value %s, note %s" % (n[0], harmonics[harm_idx]))
+            note = harmonics[harm_idx]
+            log.debug("Generating notes for harmonic at 'y' value %s, note %s" % (n[0], note))
             cuts = n[1]
             if len(cuts) == 0 and bottom:
                 log.debug("** Generating full note, for all the duration of the piece, still below the values")
+                score.append("i1 %s %s 20 %s.%02d ; Generating full note" % (0, end_of_piece, note[0], note[1]))
             else:
                 bottom = False
                 for cut, derivative in cuts:
                     if derivative >= 0:
                         prev_cut_x = cut
                     else:
-                        log.debug("** (%s) from %s to %s, length: %s" % (harmonics[harm_idx], prev_cut_x, cut, cut - prev_cut_x ))
+                        log.debug("** (%s) from %s to %s, length: %s" % (note, prev_cut_x, cut, cut - prev_cut_x))
+                        score.append(
+                            "i1 %s %s 20 %s.%02d" % (prev_cut_x, cut - prev_cut_x, note[0], note[1]))
 
                 # if last derivative is positive, generate harmonic from there till the end.
                 if len(cuts) > 0:
                     cut, derivative = cuts[-1]
                     if derivative >= 0:
-                        log.debug("** (%s) from %s to %s, length: %s" % (harmonics[harm_idx], cut, end_of_piece, end_of_piece - cut))
+                        log.debug("** (%s) from %s to %s, length: %s" % (note, cut, end_of_piece, end_of_piece - cut))
+                        score.append(
+                            "i1 %s %s 20 %s.%02d" % (cut, end_of_piece - cut, note[0], note[1]))
 
             harm_idx += 1
 
+        instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
+                                                     modulating_function_number=3, seq_length=end_of_piece,
+                                                     use_function_as_envelope=True)
+        output.write_and_play(output.get_csd([instr], score))
 
 
 class TestSineWavesPerParameter(unittest.TestCase):
@@ -371,7 +385,6 @@ class TestShepardTones(unittest.TestCase):
             absaccumdiff = 0
             notes_vals = []
 
-
             for ngap in np.arange(0, ngapvals):  # Every gap
                 # Have to map the increment in value to gap length
                 intval0 = value_function(nii)
@@ -382,17 +395,17 @@ class TestShepardTones(unittest.TestCase):
                 segmentdiff += diff
                 chordidx = get_chordidx_from_value(intval1)
                 log.debug("gap %s: Inner diff (f(%s)-f(%s)) is %s" % (ngap, nii, nii - gapsize, diff))
-                notes_vals.append((nii,diff,chordidx))
+                notes_vals.append((nii, diff, chordidx))
 
             log.debug("The segment accum diff is %s, absolute accum diff %s,  value gap is %s, error %s "
-                                                % (segmentdiff, absaccumdiff, valuegap, segmentdiff - valuegap))
+                      % (segmentdiff, absaccumdiff, valuegap, segmentdiff - valuegap))
             t = time
             for chordval in notes_vals:
                 chordidx = chordval[2]
                 diff = chordval[1]
                 log.debug("Diff is %s, absaccumdim is %s" % (diff, absaccumdiff))
                 # The duration should be the proportion of this diff from the total accumulated diff
-                duration = abs(diff*outer_step)/absaccumdiff if diff != 0 and absaccumdiff != 0 else outer_step
+                duration = abs(diff * outer_step) / absaccumdiff if diff != 0 and absaccumdiff != 0 else outer_step
                 assert not np.isnan(duration)
 
                 chord = notes[chordidx]
@@ -404,10 +417,6 @@ class TestShepardTones(unittest.TestCase):
                     pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
                     score.append("i1 %s %s %s %s \t; %s " % (t, duration, amp, pitch, note))
                 t += duration
-
-
-
-
 
             # inner_step = outer_step / abs(chordindex1 - chordindex0) if chordindex0 != chordindex1 else outer_step
             # log.debug("ni %s: ** Previous Noteindex %s of %s, value %s, local step %s" %
@@ -536,7 +545,7 @@ class TestShepardTones(unittest.TestCase):
 
         notes = shep.generate_list(scale, length=30, levels=levels, give_index_instead_of_amplitudes=True)
         # log.debug("Using list of notes: %s" % str(notes))
-        score = ["f 1 0 16384 10 1",
+        score = ["f 1 0 16384 10 1 ; Sine wave",
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
                  "f3 0 16384 20 2 1 ; Hanning window"]
 
