@@ -71,11 +71,29 @@ def notest_simple_soundwaves(osc=1, duration=30):
 class TestHarmonics(unittest.TestCase):
 
     def test_harmonics(self, step=1):
+
+        def reduce_harmonics(harms, starting_octave=0):
+            reduced = []
+            octaves_for_semitone = {key: [starting_octave] for key in range(0, 12)}
+            for o, s in harms:
+                octave = octaves_for_semitone[s][-1]
+                octaves_for_semitone[s].append(octave + 1)
+                reduced.append((octave, s))
+            return reduced
+
+        harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
+        log.debug("Harmonics are %s" % harmonics)
+        self.run_test_harmonics(harmonics, step=1)
+        harmonics = reduce_harmonics(harmonics, starting_octave=5)
+        log.debug("Reduced Harmonics are %s" % harmonics)
+        self.run_test_harmonics(harmonics, step=1)
+
+    def run_test_harmonics(self, harmonics, step=1):
+
         data = get(td.T, location='Madrid')
         end_of_piece = len(data) * step
         rng = [0, 40]
-        harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
-        log.debug("Harmonics are %s" % harmonics)
+
         notes_per_harmonic = []
         ylines = [0]
 
@@ -84,7 +102,7 @@ class TestHarmonics(unittest.TestCase):
         for i in np.arange(rng[0], rng[1], harm_step):
             # log.debug("Getting roots for step %s" % i)
             # ylines.append(i)
-            f = sp.generate_spline([x - i for x in data], step=1)
+            f = sp.generate_spline([x - i for x in data], step=step)
             d = f.derivative()
             roots = f.roots()
             values = [(x, d(x)) for x in roots]
