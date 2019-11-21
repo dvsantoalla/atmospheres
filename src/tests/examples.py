@@ -72,19 +72,10 @@ class TestHarmonics(unittest.TestCase):
 
     def test_harmonics(self, step=1):
 
-        def reduce_harmonics(harms, starting_octave=0):
-            reduced = []
-            octaves_for_semitone = {key: [starting_octave] for key in range(0, 12)}
-            for o, s in harms:
-                octave = octaves_for_semitone[s][-1]
-                octaves_for_semitone[s].append(octave + 1)
-                reduced.append((octave, s))
-            return reduced
-
         harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
         log.debug("Harmonics are %s" % harmonics)
         self.run_test_harmonics(harmonics, step=1)
-        harmonics = reduce_harmonics(harmonics, starting_octave=5)
+        harmonics = harm.reduce_harmonics(harmonics, starting_octave=5)
         log.debug("Reduced Harmonics are %s" % harmonics)
         self.run_test_harmonics(harmonics, step=1)
 

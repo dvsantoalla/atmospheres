@@ -4,17 +4,17 @@
 
 import numpy as np
 
-def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
 
+def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
     equal = []
     harmonics = []
     num_harmonics = 25
     for i in range(0, num_harmonics):
         harmonics.append(fundamental * (i + 1))
 
-    #print harmonics
+    # print harmonics
     octaves = np.sqrt(num_harmonics)
-    #print "Generated %s octaves of harmonics" % octaves
+    # print "Generated %s octaves of harmonics" % octaves
 
     # scalestep = 100 / 12.0
     base = np.longdouble(2.0)
@@ -23,9 +23,9 @@ def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
     # exponent = 1.0/12.0
     scalefactor = base ** exponent
 
-    #print type(base), base
-    #print type(exponent), exponent
-    #print type(scalefactor), scalefactor
+    # print type(base), base
+    # print type(exponent), exponent
+    # print type(scalefactor), scalefactor
 
     for octave in range(0, int(octaves)):
         scale = []
@@ -36,7 +36,7 @@ def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
     nharm = 1
     notes = []
     for h in harmonics:
-        #print "Looking up (%s) %s" % (nharm, h)
+        # print "Looking up (%s) %s" % (nharm, h)
         diff = np.longdouble(999999.0)
         tdiff = 0
         octave = 0
@@ -52,9 +52,20 @@ def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
                     diff = localdiff
                     tdiff = equal[oidx][nidx] - h
 
-        #print "Closest value (diff %s) is %s, octave %s, note %s" % (tdiff, equal[octave][note], octave, note)
+        # print "Closest value (diff %s) is %s, octave %s, note %s" % (tdiff, equal[octave][note], octave, note)
         notes.append((octave, note))
         nharm += 1
 
-    notes = [(x[0]+transpose_octaves, x[1]) for x in notes]
+    notes = [(x[0] + transpose_octaves, x[1]) for x in notes]
     return notes
+
+
+def reduce_harmonics(harms, starting_octave=0):
+
+    reduced = []
+    octaves_for_semitone = {key: [starting_octave] for key in range(0, 12)}
+    for o, s in harms:
+        octave = octaves_for_semitone[s][-1]
+        octaves_for_semitone[s].append(octave + 1)
+        reduced.append((octave, s))
+    return reduced
