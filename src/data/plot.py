@@ -30,6 +30,7 @@ def plot_test_multi(datasets, step=1, file=None, additional_ys=[], show=True):
 def plot_score(score):
 
     data = []
+    notes = []
     for line in score:
         if line.strip().startswith("i"):
             bits = line.split()
@@ -39,13 +40,13 @@ def plot_score(score):
             amplitude = float(bits[3])
             note = bits[4].split(".")
             noteval = int(note[0])*12 + int(note[1])
-
+            notes.append((noteval, bits[4]))
             data.append((start,start+duration))
             data.append((noteval,noteval))
             #data.append("r") # follow amplitude?
 
-
     plt.plot(*data, linewidth=1)
+    plt.yticks([x[0] for x in notes], [x[1] for x in notes], fontsize='small')
     plt.show()
 
 
