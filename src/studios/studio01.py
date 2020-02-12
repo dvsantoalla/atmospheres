@@ -2,16 +2,9 @@ import unittest
 import logging as log
 from studios import Studio
 
-from pprint import pprint
-from data import constants as cc
-from data import get
-from data import spline as s
-from music import notes as n
-from music import transpose as t
 from music import concepts as cnc
-from music import generation as gen
 from music import shepard as shep
-from csound import orchestra,output
+from csound import orchestra, output
 
 
 class Studio01(Studio):

@@ -50,3 +50,44 @@ STABILITY_GRADIENT = [
 # We should offer other bases here, eg over two quavers, over 
 # a triplet over a fiver, seven, semiquavers, etc
 RHYTHM_STABILITY = [1, 2, 4, 8, 3, 5, 7]
+
+#
+# Drum beats with increasing levels of complexity according to
+# to the layer of sound
+#
+
+DBD='bass'
+DSN='snare'
+DHI='hihat'
+DCY='cymbal'
+
+DINSTR = [DBD,DSN,DHI,DCY]
+
+# Each successive level only records whatever is different from the
+# previous, empty meaning the instrument does not sound
+# All these beats are based in a pattern of 8 notes per bar
+
+BEAT8_LEVELS = [
+    {
+        DBD:[1]+[0]*7
+     },
+    {
+        DBD:[1,0,0,0,1,0,0,0]
+    },
+    {
+        DBD:[1,0,0,1,1,0,0,1]
+    },
+    {
+        DSN:[0,0,1,0,0,0,1,0]
+    },
+    {
+        DHI: [1,0,1,0,1,0,1,0]
+    },
+    {
+        DCY:[1]+[0]*7
+    },
+    {
+        DSN: [0, 0, 1, 1, 0, 1, 1, 1]
+    }
+
+]

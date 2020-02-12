@@ -53,8 +53,8 @@ def notest_simple_soundwaves(osc=1, duration=30):
     elif osc == 3:
         oscillator = orchestra.oscillator_dual(points, instrument_number=3)
         events = [
-            "i3 0 %s 10000 2 3 ; " % duration,
-            "i3 0 %s 10000 5 4 ; " % duration,
+            "i3 0 %s 5000 2 3 ; " % duration,
+            "i3 0 %s 5000 5 4 ; " % duration,
         ]
 
     score = ["f1 0 8192 10 1  ; Table containing a sine wave.",
@@ -74,16 +74,16 @@ class TestHarmonics(unittest.TestCase):
 
         harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
         log.debug("Harmonics are %s" % harmonics)
-        self.run_test_harmonics(harmonics, step=1)
+        #self.run_test_harmonics(harmonics, step=2)
         harmonics = harm.reduce_harmonics(harmonics, starting_octave=5)
         log.debug("Reduced Harmonics are %s" % harmonics)
-        self.run_test_harmonics(harmonics, step=1)
+        self.run_test_harmonics(harmonics, step=4)
 
     def run_test_harmonics(self, harmonics, step=1):
 
         data = get(td.T, location='Madrid')
         end_of_piece = len(data) * step
-        rng = [0, 40]
+        rng = [0, len(data)]
 
         notes_per_harmonic = []
         ylines = [0]
@@ -162,7 +162,7 @@ class TestSineWaveWithModulatedDetune(unittest.TestCase):
     will control how much is the second sine wave detuned in relation to the first, creating a "beat" between both.
     We have to see how a parameter should translate into "beat" as closer waves can sound more "unstable" that two further away"""
 
-    def notest_modulated_dissonance(self):
+    def test_modulated_dissonance(self):
         test_simple_soundwaves(osc=3)
 
 
@@ -535,7 +535,7 @@ class TestShepardTones(unittest.TestCase):
         self.basic_test(step_function=f)
 
     def notest_speeding_slowing_following_data(self):
-        data = get(td.W, location='Madrid')
+        data = get(td.W, location='Reading')
         self.run_speeding_slowing_following_data(data)
         data = map(lambda x: x * 40, np.hanning(40))
         self.run_speeding_slowing_following_data(data)
