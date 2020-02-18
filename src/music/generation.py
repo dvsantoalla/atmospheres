@@ -8,7 +8,7 @@ import music.concepts as c
 def get_notes_following_spline(dataset, parameter_name, scale, starting_note, octave_adjust=0, step=6):
     """ Generate a stream of notes from a extended scale
         that follow the movement of one or several parameters
-        octave_adjust: Tranpose this number of octaves
+        octave_adjust: Transpose this number of octaves
         step: Number of notes by original data value"""
 
     mad2t = dataset
@@ -78,3 +78,11 @@ def get_rhythm_level(beat, level):
             result[k] = level_beat[k]
 
     return result
+
+
+def get_rhythm_sequence(beat, levels):
+    result = []
+    for i in levels:
+        result.append(get_rhythm_level(beat, i))
+    return result
+

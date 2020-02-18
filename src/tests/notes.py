@@ -6,6 +6,7 @@ from music import notes as n
 from music import transpose as t
 from music import concepts as cnc
 from music import generation as gen
+from csound import mikelson_drums as mkdrums
 
 
 class TestNotes(unittest.TestCase):
@@ -39,7 +40,33 @@ class TestNotes(unittest.TestCase):
 
         log.debug(stream)
 
-    def test_beats(self):
+    def get_all_beats(self):
+        result = []
         beat = cnc.BEAT8_LEVELS
-        for i in range(0, len(beat)+1):
-            log.debug("Level %s, instruments %s" % (i, gen.get_rhythm_level(beat, i)))
+        for i in range(0, len(beat) + 1):
+            bar = gen.get_rhythm_level(beat, i)
+            log.debug("Level %s, instruments %s" % (i, bar))
+            result.append(bar)
+        return result
+
+    def test_drums(self):
+        output = ""
+        bars = self.get_all_beats()
+        time_count = 0
+        inner_step = 0
+        step = 0.25
+        for b in bars:
+            log.debug("Generating bar %s" % b)
+            output += "; **** Generating bar %s\n" % (b)
+            for i in ["bass", "snare", "hihat"]:
+                data = b.get(i, [])
+                output += "; generating instrument '%s' bar %s \n" % (i, data)
+                gen_instr, gen_note = mkdrums.get_drum_function(i)
+                if len(data) > 0:
+                    inner_step = 0
+                    for note in data:
+                        if note == 1:
+                            output += gen_note(start=time_count + inner_step) + '\n'
+                        inner_step += step
+            time_count += inner_step
+        log.info(output)

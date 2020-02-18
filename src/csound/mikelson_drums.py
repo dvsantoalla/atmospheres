@@ -1,4 +1,3 @@
-
 def get_header():
     return """
 ;---------------------------------------------------------
@@ -18,18 +17,20 @@ def get_drums():
     """
 http://csoundjournal.com/ezine/winter2001/synthesis/index.html
 
-; Bass Kick Drum 2
-;	Sta	Dur	Amp	HiF	LoF	Pan	Dec	Tens	Hit	PBendQ	OD	OC	OF	Sustain	RezFmF	LPAmpF
-i11	0.0	.25	30000	200	90	.5	.03	.2	.5	4	.02	.1	1	.01	20	8
-; Snare 4
-;	Sta	Dur	Amp	Fqc	Pan	Q	SprDec	SprTone	SprMix	SprQ	PBend	PBTime
-i34	.5	.5	30000	7.00	.3	.7	1	1	1	1	1.5	.1
-
-; Cymbal
-;	Sta	Dur	Amp	Pitch	Pan	Fc	Q	OTAmp	OTFqc	OTQ	Mix
-i24	0.0	0.25	30000	8.00	0.7	5333	40.0	0.5	1.5	0.2	.2
 """
     pass
+
+
+def get_drum_function(name):
+
+    if name=="bass":
+        return get_kick_drum2(), get_kick_drum2_note
+    elif name == "snare":
+        return get_snare4, get_snare4_note
+    elif name == "hihat":
+        return get_stereo_cymbal2, get_stereo_cymbal2_note
+    else:
+        return None, None
 
 
 def get_pinkish_noise():
@@ -131,7 +132,7 @@ aoutr  =         aout1r*klimr*iamp*kdclck*iacc		; Scale again and ouput
 """
 
 
-def get_bass_drum2():
+def get_kick_drum2():
     return """
 ;---------------------------------------------------------
 ; Kick Drum 2
@@ -196,6 +197,22 @@ aoutr	=	aout
 """
 
 
+def get_kick_drum2_note(instrument=11,
+                        start=0.0, duration=0.25, amplitude=30000, hi_frequency=200, lo_frequency=80,
+                        pan=0.5, decay=0.03, tension=0.2, hit=0.5, pbendq=4, od=0.02, oc=0.1, of=1,
+                        sustain=0.01, rezfmf=20, lpampf=8):
+    """
+; Bass Kick Drum 2
+;	Sta	Dur	Amp	    HiF	LoF	Pan	Dec	Tens	Hit	PBendQ	OD	OC	OF	Sustain	RezFmF	LPAmpF
+i11	0.0	.25	30000	200	90	.5	.03	.2	    .5	4	    .02	.1	1	.01	    20	    8
+    """
+
+    return "i%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" % \
+           (instrument, start, duration, amplitude, hi_frequency, lo_frequency,
+            pan, decay, tension, hit, pbendq, od, oc, of,
+            sustain, rezfmf, lpampf)
+
+
 def get_stereo_cymbal2():
     return """
 
@@ -252,6 +269,19 @@ alpr	butlp	aoutr, 15000		; frequencies to get rid of some noise
 	endin
 	
 """
+
+
+def get_stereo_cymbal2_note(instrument=24, start=0.0, duration=0.5, amplitude=30000, pitch=8.00,
+                            pan=0.7, fc=5333, q=40.0, otamp=0.5, otfqc=1.5, otq=0.2, mix=0.2):
+    """
+; Cymbal
+;	Sta	Dur	    Amp	    Pitch	Pan	Fc	    Q	    OTAmp	OTFqc	OTQ	Mix
+i24	0.0	0.25	30000	8.00	0.7	5333	40.0	0.5	    1.5	    0.2	.2
+"""
+
+    return "i%s %s %s %s %s %s %s %s %s %s %s %s" % \
+           (instrument, start, duration, amplitude, pitch,
+            pan, fc, q, otamp, otfqc, otq, mix)
 
 
 def get_snare4():
@@ -319,3 +349,15 @@ aoutr  =         (asig1+asig2+aosc2*.1+ahpr*ispmix*4)*iamp*kdclk
        endin
        
 """
+
+
+def get_snare4_note(instrument=34, start=0.5, duration=0.5, amplitude=30000, frequency=7.00, pan=0.3,
+                    q=0.7, sprdec=1, sprtone=1, sprmix=1, sprq=1, pbend=1.5, pbtime=0.1):
+    """; Snare 4
+;	Sta	Dur	Amp	    Fqc	    Pan	 Q	SprDec	SprTone	SprMix	SprQ	PBend	PBTime
+i34	.5	.5	30000	7.00	.3	.7	1	    1	    1	    1	    1.5	    .1
+"""
+
+    return "i%s %s %s %s %s %s %s %s %s %s %s %s %s" % \
+           (instrument, start, duration, amplitude, frequency, pan, q, sprdec, sprtone, sprmix,
+            sprq, pbend, pbtime)
