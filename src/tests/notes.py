@@ -7,7 +7,7 @@ from music import transpose as t
 from music import concepts as cnc
 from music import generation as gen
 from csound import mikelson_drums as mkdrums
-
+from csound import output
 
 class TestNotes(unittest.TestCase):
 
@@ -50,23 +50,39 @@ class TestNotes(unittest.TestCase):
         return result
 
     def test_drums(self):
-        output = ""
+
         bars = self.get_all_beats()
+
+        score = ["f1 0 65536 10 1", "f5 0 1024 -8 1 256 1 256 .7 256 .1 256 .01"]
+        # The pink noise should last all piece, to be able to mix it from the zak output channel
+        len_ticks = (len(bars)-1)*2
+        score += ['i1     0       %s      .5      1 ; Pink noise, all piece long' % len_ticks]
+        score += ['i1     0       %s      .5      2 ; Pink noise, all piece long' % len_ticks]
+        instr = [mkdrums.get_pinkish_noise()]
+
         time_count = 0
         inner_step = 0
         step = 0.25
+        log.debug("The piece has %s bars, %s beats" % (len(bars), len_ticks))
         for b in bars:
             log.debug("Generating bar %s" % b)
-            output += "; **** Generating bar %s\n" % (b)
+            score += ["; **** Generating bar %s\n" % (b)]
             for i in ["bass", "snare", "hihat"]:
                 data = b.get(i, [])
-                output += "; generating instrument '%s' bar %s \n" % (i, data)
+                score += ["; generating instrument '%s' bar %s \n" % (i, data)]
                 gen_instr, gen_note = mkdrums.get_drum_function(i)
                 if len(data) > 0:
                     inner_step = 0
                     for note in data:
                         if note == 1:
-                            output += gen_note(start=time_count + inner_step) + '\n'
+                            score += [gen_note(start=time_count + inner_step) + '\n']
                         inner_step += step
             time_count += inner_step
-        log.info(output)
+
+        for i in ["bass", "snare", "hihat"]:
+            gen_instr, gen_note = mkdrums.get_drum_function(i)
+            instr.append(gen_instr())
+
+        log.info(score)
+        output.write_and_play(output.get_csd(instr, score, headers=["zakinit	50,50	; Initialize the zak system"]))
+

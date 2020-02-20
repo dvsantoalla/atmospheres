@@ -24,7 +24,7 @@ http://csoundjournal.com/ezine/winter2001/synthesis/index.html
 def get_drum_function(name):
 
     if name=="bass":
-        return get_kick_drum2(), get_kick_drum2_note
+        return get_kick_drum2, get_kick_drum2_note
     elif name == "snare":
         return get_snare4, get_snare4_note
     elif name == "hihat":
@@ -352,10 +352,12 @@ aoutr  =         (asig1+asig2+aosc2*.1+ahpr*ispmix*4)*iamp*kdclk
 
 
 def get_snare4_note(instrument=34, start=0.5, duration=0.5, amplitude=30000, frequency=7.00, pan=0.3,
-                    q=0.7, sprdec=1, sprtone=1, sprmix=1, sprq=1, pbend=1.5, pbtime=0.1):
+                    q=0.7, sprdec=0.1, sprtone=1, sprmix=0.5, sprq=1, pbend=1.5, pbtime=0.1):
     """; Snare 4
 ;	Sta	Dur	Amp	    Fqc	    Pan	 Q	SprDec	SprTone	SprMix	SprQ	PBend	PBTime
 i34	.5	.5	30000	7.00	.3	.7	1	    1	    1	    1	    1.5	    .1
+
+i34 12.25.5 30000   7.00    .3  .7  .1      1       .5      1       1.5     .1
 """
 
     return "i%s %s %s %s %s %s %s %s %s %s %s %s %s" % \

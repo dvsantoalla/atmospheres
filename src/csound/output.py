@@ -5,7 +5,7 @@ import os
 DAC=True
 FILENAME="output.wav"
 
-def get_csd(orchestra,score):
+def get_csd(orchestra, score, headers=[]):
         if DAC:
             output_file="-odac"
         else:
@@ -21,7 +21,7 @@ def get_csd(orchestra,score):
         kr = 4410  ; Control signal rate.
         ksmps = 10  ; Samples pr. control signal.
         nchnls = 1  ; Number of output channels.
-
+		%s
         %s
 
 </CsInstruments>
@@ -31,7 +31,7 @@ def get_csd(orchestra,score):
 e
 </CsScore>
 </CsoundSynthesizer>
-""" % (output_file, ("\n").join(orchestra),("\n").join(score))
+""" % (output_file, ("\n").join(headers), ("\n").join(orchestra),("\n").join(score))
 	return csd
 
 
