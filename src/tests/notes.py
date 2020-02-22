@@ -6,6 +6,7 @@ from music import notes as n
 from music import transpose as t
 from music import concepts as cnc
 from music import generation as gen
+from music import rhythms as rhy
 from csound import mikelson_drums as mkdrums
 from csound import output
 
@@ -44,7 +45,7 @@ class TestNotes(unittest.TestCase):
         result = []
         beat = cnc.BEAT8_LEVELS
         for i in range(0, len(beat) + 1):
-            bar = gen.get_rhythm_level(beat, i)
+            bar = rhy.get_rhythm_level(beat, i)
             log.debug("Level %s, instruments %s" % (i, bar))
             result.append(bar)
         return result
@@ -62,7 +63,7 @@ class TestNotes(unittest.TestCase):
 
         time_count = 0
         inner_step = 0
-        step = 0.25
+        step = 0.125
         log.debug("The piece has %s bars, %s beats" % (len(bars), len_ticks))
         for b in bars:
             log.debug("Generating bar %s" % b)
@@ -73,10 +74,11 @@ class TestNotes(unittest.TestCase):
                 gen_instr, gen_note = mkdrums.get_drum_function(i)
                 if len(data) > 0:
                     inner_step = 0
-                    for note in data:
-                        if note == 1:
-                            score += [gen_note(start=time_count + inner_step) + '\n']
-                        inner_step += step
+                    for beat in data:
+                        for accent in beat:
+                            if accent > 0:
+                                score += [gen_note(start=time_count + inner_step, amplitude=30000*accent) + '\n']
+                            inner_step += step
             time_count += inner_step
 
         for i in ["bass", "snare", "hihat"]:

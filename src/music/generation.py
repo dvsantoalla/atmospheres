@@ -2,7 +2,7 @@ import logging as log
 import data.constants as cc
 import data.spline as s
 import music.transpose as t
-import music.concepts as c
+
 
 
 def get_notes_following_spline(dataset, parameter_name, scale, starting_note, octave_adjust=0, step=6):
@@ -64,25 +64,5 @@ def index_for_value(value, lower_value_range, upper_value_range, lower_index, up
     return int(norm_value * indices / rng + lower_index)
 
 
-def get_rhythm_level(beat, level):
-    if level >= len(beat) + 1:
-        log.debug("We cannot get rhythm level %s from beat, as there are only %s levels" % (level, len(beat)))
-        return None
-    # Set initial empty values
-    result = {}
-    for i in c.DINSTR:
-        result[i] = []
-    for i in range(0, level):
-        level_beat = beat[i]
-        for k in level_beat.keys():
-            result[k] = level_beat[k]
 
-    return result
-
-
-def get_rhythm_sequence(beat, levels):
-    result = []
-    for i in levels:
-        result.append(get_rhythm_level(beat, i))
-    return result
 
