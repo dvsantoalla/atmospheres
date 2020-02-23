@@ -272,7 +272,7 @@ alpr	butlp	aoutr, 15000		; frequencies to get rid of some noise
 
 
 def get_stereo_cymbal2_note(instrument=24, start=0.0, duration=0.5, amplitude=30000, pitch=8.00,
-                            pan=0.7, fc=5333, q=40.0, otamp=0.5, otfqc=1.5, otq=0.2, mix=0.2):
+                            pan=0.7, fc=5333, q=40.0, otamp=0.5, otfqc=1.5, otq=0.2, mix=0.2, hit=None):
     """
 ; Cymbal
 ;	Sta	Dur	    Amp	    Pitch	Pan	Fc	    Q	    OTAmp	OTFqc	OTQ	Mix
@@ -352,7 +352,7 @@ aoutr  =         (asig1+asig2+aosc2*.1+ahpr*ispmix*4)*iamp*kdclk
 
 
 def get_snare4_note(instrument=34, start=0.5, duration=0.5, amplitude=30000, frequency=7.00, pan=0.3,
-                    q=0.7, sprdec=0.1, sprtone=1, sprmix=0.5, sprq=1, pbend=1.5, pbtime=0.1):
+                    q=0.7, sprdec=0.1, sprtone=1, sprmix=0.5, sprq=1, pbend=1.5, pbtime=0.1, hit=None):
     """; Snare 4
 ;	Sta	Dur	Amp	    Fqc	    Pan	 Q	SprDec	SprTone	SprMix	SprQ	PBend	PBTime
 i34	.5	.5	30000	7.00	.3	.7	1	    1	    1	    1	    1.5	    .1

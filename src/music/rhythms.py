@@ -1,5 +1,6 @@
 import logging as log
 import music.concepts as c
+import csound.mikelson_drums as mkdrums
 
 
 def get_rhythm_level(beat, level):
@@ -25,3 +26,53 @@ def get_rhythm_sequence(beat, levels):
     for i in levels:
         result.append(get_rhythm_level(beat, i))
     return result
+
+
+def get_all_beats():
+    result = []
+    beat = c.BEAT16_LEVELS
+    for i in range(0, len(beat) + 1):
+        bar = get_rhythm_level(beat, i)
+        log.debug("Level %s, instruments %s" % (i, bar))
+        result.append(bar)
+    return result
+
+def generate_drums():
+
+    #TODO: Select Beats index from list of values and range
+    bars = get_all_beats()
+
+    score = ["f1 0 65536 10 1", "f5 0 1024 -8 1 256 1 256 .7 256 .1 256 .01"]
+    # The pink noise should last all piece, to be able to mix it from the zak output channel
+    len_ticks = (len(bars)-1)*2
+    score += ['i1     0       %s      .5      1 ; Pink noise, all piece long' % len_ticks]
+    score += ['i1     0       %s      .5      2 ; Pink noise, all piece long' % len_ticks]
+    instr = [mkdrums.get_pinkish_noise()]
+
+    time_count = 0
+    inner_step = 0
+    step = 0.125
+    log.debug("The piece has %s bars, %s beats" % (len(bars), len_ticks))
+    for b in bars:
+        log.debug("Generating bar %s" % b)
+        score += ["; **** Generating bar %s\n" % (b)]
+        for i in ["bass", "snare", "hihat"]:
+            data = b.get(i, [])
+            score += ["; generating instrument '%s' bar %s \n" % (i, data)]
+            gen_instr, gen_note = mkdrums.get_drum_function(i)
+            if len(data) > 0:
+                inner_step = 0
+                for beat in data:
+                    for accent in beat:
+                        if accent > 0:
+                            score += [gen_note(start=time_count + inner_step, amplitude=30000*accent, hit=accent) + '\n']
+                        inner_step += step
+        time_count += inner_step
+
+    for i in ["bass", "snare", "hihat"]:
+        gen_instr, gen_note = mkdrums.get_drum_function(i)
+        instr.append(gen_instr())
+
+    log.info(score)
+    return instr, score, ["zakinit	50,50	; Initialize the zak system"]
+
