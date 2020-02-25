@@ -2,6 +2,7 @@ import unittest
 import logging as log
 from data import constants as cc
 from data import get
+from data import plot as plt
 from music import notes as n
 from music import transpose as t
 from music import concepts as cnc
@@ -41,8 +42,17 @@ class TestNotes(unittest.TestCase):
 
         log.debug(stream)
 
-    def test_drums(self):
+    def notest_drums_range(self):
 
         instr, score, headers = rhy.generate_drums()
+        output.write_and_play(output.get_csd(instr, score, headers=headers))
+
+
+    def test_drums_following_data(self):
+
+        place = "Madrid"
+        mad2t = get(cc.W, location=place)
+        plt.plot_test_multi([mad2t])
+        instr, score, headers = rhy.generate_drums(data=mad2t, range=(0, 10))
         output.write_and_play(output.get_csd(instr, score, headers=headers))
 

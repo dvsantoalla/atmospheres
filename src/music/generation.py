@@ -57,7 +57,13 @@ def note_for_value(value, lower_range, upper_range, scale):
     return scale[note_pos]
 
 
-def index_for_value(value, lower_value_range, upper_value_range, lower_index, upper_index):
+def index_for_value(value, lower_value_range, upper_value_range, lower_index, upper_index, check_range=False):
+
+    if check_range and value < lower_value_range:
+        return lower_index
+    elif check_range and value > upper_value_range:
+        return upper_index
+
     rng = upper_value_range - lower_value_range
     indices = upper_index - lower_index
     norm_value = value - lower_value_range

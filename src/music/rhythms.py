@@ -1,6 +1,7 @@
 import logging as log
 import music.concepts as c
 import csound.mikelson_drums as mkdrums
+import music.generation as gen
 
 
 def get_rhythm_level(beat, level):
@@ -37,21 +38,35 @@ def get_all_beats():
         result.append(bar)
     return result
 
-def generate_drums():
+def generate_drums(data=None, range=None):
 
     #TODO: Select Beats index from list of values and range
     bars = get_all_beats()
 
     score = ["f1 0 65536 10 1", "f5 0 1024 -8 1 256 1 256 .7 256 .1 256 .01"]
+
+
+    time_count = 0
+    inner_step = 0
+    step = 0.125
+
+    if data is not None and range is not None:
+        result = []
+        upper = range[1]
+        lower = range[0]
+        for d in data:
+            index = gen.index_for_value(d, lower, upper, 0, len(bars)-1)
+            log.debug("Appending bar %s out of %s for value %s in range %s" % (index,len(bars),d,range))
+            result.append(bars[index])
+        bars = result
+
+
     # The pink noise should last all piece, to be able to mix it from the zak output channel
     len_ticks = (len(bars)-1)*2
     score += ['i1     0       %s      .5      1 ; Pink noise, all piece long' % len_ticks]
     score += ['i1     0       %s      .5      2 ; Pink noise, all piece long' % len_ticks]
     instr = [mkdrums.get_pinkish_noise()]
 
-    time_count = 0
-    inner_step = 0
-    step = 0.125
     log.debug("The piece has %s bars, %s beats" % (len(bars), len_ticks))
     for b in bars:
         log.debug("Generating bar %s" % b)
