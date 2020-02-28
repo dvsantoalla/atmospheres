@@ -3,7 +3,6 @@ import unittest
 import logging as log
 import numpy as np
 import data.plot as plt
-import scipy.optimize as opt
 from csound import output, orchestra
 from csound.orchestra import gen08
 from music import concepts as cnc
@@ -16,7 +15,7 @@ from data import get
 from data import spline as sp
 
 
-def notest_simple_soundwaves(osc=1, duration=30):
+def test_simple_soundwaves(osc=1, duration=30):
     """ Play a sine wave for each of the parameters of Madrid in 2014. Depending on the osc parameter
     1: Play four sine waves following each of 2t, p, w, c
     2: Play two sine waves, modulated in frequency and amplitude, the first by 2t and w, the second by p and c
@@ -74,72 +73,17 @@ class TestHarmonics(unittest.TestCase):
 
         harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
         log.debug("Harmonics are %s" % harmonics)
-        #self.run_test_harmonics(harmonics, step=2)
+
         harmonics = harm.reduce_harmonics(harmonics, starting_octave=5)
         log.debug("Reduced Harmonics are %s" % harmonics)
-        self.run_test_harmonics(harmonics, step=4)
-
-    def run_test_harmonics(self, harmonics, step=1):
 
         data = get(td.T, location='Madrid')
-        end_of_piece = len(data) * step
-        rng = [0, len(data)]
+        instr, score = harm.sound_harmonics_from_data(harmonics, data, step=4)
 
-        notes_per_harmonic = []
-        ylines = [0]
-
-        log.debug("The number of data points is %s, number of harmonics is %s" % (len(data), len(harmonics)))
-        harm_step = (rng[1] - rng[0]) / float(len(harmonics))
-        for i in np.arange(rng[0], rng[1], harm_step):
-            # log.debug("Getting roots for step %s" % i)
-            # ylines.append(i)
-            f = sp.generate_spline([x - i for x in data], step=step)
-            d = f.derivative()
-            roots = f.roots()
-            values = [(x, d(x)) for x in roots]
-            notes_per_harmonic.append((i, values))
-            # log.debug("For level %s, roots %s" % (i, values))
-            #p = plt.plot_test_multi([[x - i for x in data]], additional_ys=ylines)
-
-        score = ["f 1 0 16384 10 1 ; Sine wave",
-                 "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
-                 "f3 0 16384 20 2 1 ; Hanning window"]
-
-        bottom = True
-        harm_idx = 0
-        for n in notes_per_harmonic:
-            prev_cut_x = 0
-            note = harmonics[harm_idx]
-            log.debug("Generating notes for harmonic at 'y' value %s, note %s" % (n[0], note))
-            cuts = n[1]
-            if len(cuts) == 0 and bottom:
-                log.debug("** Generating full note, for all the duration of the piece, still below the values")
-                score.append("i1 %s %s 20 %s.%02d ; Generating full note" % (0, end_of_piece, note[0], note[1]))
-            else:
-                bottom = False
-                for cut, derivative in cuts:
-                    if derivative >= 0:
-                        prev_cut_x = cut
-                    else:
-                        log.debug("** (%s) from %s to %s, length: %s" % (note, prev_cut_x, cut, cut - prev_cut_x))
-                        score.append(
-                            "i1 %s %s 20 %s.%02d" % (prev_cut_x, cut - prev_cut_x, note[0], note[1]))
-
-                # if last derivative is positive, generate harmonic from there till the end.
-                if len(cuts) > 0:
-                    cut, derivative = cuts[-1]
-                    if derivative >= 0:
-                        log.debug("** (%s) from %s to %s, length: %s" % (note, cut, end_of_piece, end_of_piece - cut))
-                        score.append(
-                            "i1 %s %s 20 %s.%02d" % (cut, end_of_piece - cut, note[0], note[1]))
-
-            harm_idx += 1
-
-        instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
-                                                     modulating_function_number=3, seq_length=end_of_piece,
-                                                     use_function_as_envelope=True)
         plt.plot_score(score)
-        output.write_and_play(output.get_csd([instr], score))
+        output.write_and_play(output.get_csd(instr, score))
+
+
 
 
 class TestSineWavesPerParameter(unittest.TestCase):

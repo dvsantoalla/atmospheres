@@ -36,7 +36,7 @@ def basic_wave(instrument_number=1, function_number=1):
 
 
 def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1, modulating_function_number=2,
-                         seq_length=7, table_length=16384, use_function_as_envelope=False):
+                         seq_length=7, table_length=16384, use_function_as_envelope=False, amplitude=50000):
     """
     Requires a function f function_number defining the waveform, eg
         f1 0 16384 10 1                                          ; Sine
@@ -53,15 +53,15 @@ def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1
     """
 
     oscillator = """
-        asig oscil iamp * 5000, cpspch(p5), %s
-    """ % oscillator_function_number
+        asig oscil iamp * %s, cpspch(p5), %s
+    """ % (amplitude, oscillator_function_number)
 
     if use_function_as_envelope:
         oscillator = """
         kampidx line 0, p3, %s  ; p3 is duration
         kampfactor table kampidx, %s
-        asig oscil iamp * 5000 * kampfactor , cpspch(p5), %s
-    """ % (table_length, modulating_function_number, oscillator_function_number)
+        asig oscil iamp * %s * kampfactor , cpspch(p5), %s
+    """ % (table_length, modulating_function_number, amplitude, oscillator_function_number)
 
     csd = """
 

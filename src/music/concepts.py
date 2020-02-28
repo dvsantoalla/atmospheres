@@ -78,9 +78,7 @@ BEAT16_LEVELS = [
     {
         DBD: [[1, 0, 0, 0], [0, 0, 1, 0]]
     },
-    {
-        DBD: [[1]],
-    },
+
     {
         DBD: [[1, 0, 0, 0], [0, 0, 1, 0]],
         DSN: [[0, 0, 0, 0], [1, 0, 0, 0]]
@@ -125,9 +123,13 @@ BEAT16_LEVELS = [
     {
         DBD: [[1, 0, .75, 0], [0, 0, .75, 0]],
         DSN: [[0, .75, 0, 0], [1, 0, .0, .75]]
-    }
-
-
+    },
+    {
+        DBD: [[1]],
+    },
+    {
+        DBD: [[1]],
+    },
 
 ]
 
@@ -151,7 +153,7 @@ def expand_rhythm(beat):
 def expand_bar(bar):
     """ Expand a bar into 4 notes """
     missing = 4-len(bar)
-    log.debug("Expanding bar %s, missing %s elements" % (bar,missing))
+    #log.debug("Expanding bar %s, missing %s elements" % (bar,missing))
     if missing == 1:
         return bar.append(bar[2])
     elif missing == 2:
