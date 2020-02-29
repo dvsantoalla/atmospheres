@@ -1,7 +1,7 @@
-import os
 import json
-import pprint
 import logging as log
+import os
+
 
 def load_data(directory):
 

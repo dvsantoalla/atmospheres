@@ -1,18 +1,18 @@
-import sys
-import unittest
 import logging as log
-import numpy as np
+import unittest
+
 import data.plot as plt
+import numpy as np
 from csound import output, orchestra
 from csound.orchestra import gen08
-from music import concepts as cnc
-from music import generation as gen
-from music import notes as n
-from music import shepard as shep
-from music import harmonics as harm
 from data import constants as td
 from data import get
 from data import spline as sp
+from music import concepts as cnc
+from music import generation as gen
+from music import harmonics as harm
+from music import notes as n
+from music import shepard as shep
 
 
 def test_simple_soundwaves(osc=1, duration=30):

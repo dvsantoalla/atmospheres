@@ -1,17 +1,18 @@
-import unittest
 import logging as log
+import unittest
+
+from csound import output
 from data import constants as cc
 from data import get
 from data import plot as plt
 from data import spline as sp
-from music import notes as n
-from music import transpose as t
 from music import concepts as cnc
 from music import generation as gen
-from music import rhythms as rhy
 from music import harmonics as harm
-from csound import mikelson_drums as mkdrums
-from csound import output
+from music import notes as n
+from music import rhythms as rhy
+from music import transpose as t
+
 
 class TestNotes(unittest.TestCase):
 

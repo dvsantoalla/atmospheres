@@ -1,5 +1,4 @@
 import scipy.interpolate as intp
-import logging as log
 
 
 def generate_spline_xy(xvals, yvals):

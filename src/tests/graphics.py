@@ -1,7 +1,9 @@
 import unittest
+
 from data import constants as c
-from data import plot as pl
 from data import get
+from data import plot as pl
+
 
 class TestGraphics(unittest.TestCase):
 

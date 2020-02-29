@@ -1,5 +1,3 @@
-import spline
-
 D="date"
 TM="time"
 W="ws"    # in m/s

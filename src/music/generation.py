@@ -1,8 +1,8 @@
 import logging as log
+
 import data.constants as cc
 import data.spline as s
 import music.transpose as t
-
 
 
 def get_notes_following_spline(dataset, parameter_name, scale, starting_note, octave_adjust=0, step=6):

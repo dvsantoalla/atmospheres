@@ -1,6 +1,6 @@
-from subprocess import Popen,PIPE
 import logging as log
 import os
+from subprocess import Popen, PIPE
 
 DAC=True
 FILENAME="output.wav"

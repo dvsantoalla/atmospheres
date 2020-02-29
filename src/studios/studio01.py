@@ -1,10 +1,9 @@
-import unittest
 import logging as log
-from studios import Studio
 
+from csound import orchestra, output
 from music import concepts as cnc
 from music import shepard as shep
-from csound import orchestra, output
+from studios import Studio
 
 
 class Studio01(Studio):

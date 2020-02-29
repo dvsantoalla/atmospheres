@@ -1,6 +1,7 @@
 import logging as log
-import music.concepts as c
+
 import csound.mikelson_drums as mkdrums
+import music.concepts as c
 import music.generation as gen
 
 

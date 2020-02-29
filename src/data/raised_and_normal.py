@@ -1,5 +1,6 @@
-import logging as log 
-from math import pi,e, sqrt, cos
+import logging as log
+from math import pi, e, sqrt, cos
+
 from matplotlib import pyplot as p
 from scipy import sinc
 

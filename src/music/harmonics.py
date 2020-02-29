@@ -2,12 +2,11 @@
 # https://en.wikipedia.org/wiki/Harmonic_series_(music)
 # Interval strength (David Cope) https://en.wikipedia.org/wiki/Interval_(music)#Consonant_and_dissonant
 
-import numpy as np
 import logging as log
-from data import spline as sp
-from data import plot as plt
-from csound import orchestra
 
+import numpy as np
+from csound import orchestra
+from data import spline as sp
 
 
 def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):

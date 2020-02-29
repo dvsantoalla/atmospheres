@@ -1,7 +1,9 @@
-import matplotlib.pyplot as plt
-from spline import generate_spline
-import random
 import logging as log
+import random
+
+import matplotlib.pyplot as plt
+
+from spline import generate_spline
 
 
 def plot_test_multi(datasets, step=1, file=None, additional_ys=[], show=True):

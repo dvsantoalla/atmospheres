@@ -1,8 +1,9 @@
-import unittest
 import logging as log
+import unittest
+
+from csound import orchestra, output
 from music import concepts as cnc
 from music import shepard as shep
-from csound import orchestra,output
 
 
 class TestShepard(unittest.TestCase):

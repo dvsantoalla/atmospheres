@@ -1,5 +1,5 @@
 import unittest
-import logging as log
+
 import studios
 import studios.studio01
 

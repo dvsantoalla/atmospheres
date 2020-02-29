@@ -1,8 +1,10 @@
 import unittest
-from csound import output,orchestra
+
+from csound import output, orchestra
 from csound.orchestra import gen08
 from data import constants as c
 from data import get
+
 
 class TestSounds(unittest.TestCase):
 

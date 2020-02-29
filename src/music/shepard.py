@@ -1,9 +1,11 @@
-import notes
-import concepts
 import transpose
-import logging as log 
-from data import raised_and_normal
+import logging as log
 from itertools import cycle
+
+from data import raised_and_normal
+
+import transpose
+
 
 def generate_cycles (scale, levels=1, give_index_instead_of_amplitudes=False):
     """ Generate a list of cycles, each one of them generating a pair of (amp,note).

@@ -3,7 +3,6 @@ import argparse
 from tests.notes import *
 from tests.sounds import *
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('-t','--test', help="Run the following tests or 'all'")
 parser.add_argument('-o','--output', help="Write output to a file instead of DAC")

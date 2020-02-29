@@ -1,6 +1,4 @@
-import logging as log
 from notes import *
-from transpose import transpose, extend
 
 # Load up all notes from the NOTES array in the notes module
 # exec(foo + " = 'something else'")
