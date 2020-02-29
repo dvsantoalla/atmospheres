@@ -1,10 +1,9 @@
-import transpose
+
 import logging as log
 from itertools import cycle
 
 from data import raised_and_normal
-
-import transpose
+import music.transpose as transpose
 
 
 def generate_cycles (scale, levels=1, give_index_instead_of_amplitudes=False):
@@ -30,11 +29,11 @@ def generate_cycles (scale, levels=1, give_index_instead_of_amplitudes=False):
     #print "Amps and Notes %s" % result
 
     level_cycles = []
-    for i in range(0,levels):
+    for i in range(0, levels):
         c = cycle(result)
         move = i*len(scale)
-        for j in range(0,move):
-            c.next()
+        for j in range(0, move):
+            next(c)
         level_cycles.append(c)
     
     return level_cycles
@@ -53,7 +52,7 @@ def generate_list(scale, length=1, levels=1, give_index_instead_of_amplitudes=Fa
     for i in scale*length:
         chord = []
         for c in level_cycles:
-            chord.append(c.next())
+            chord.append(next(c))
         chord = sorted(chord, key=lambda note: note[1].octave*12+note[1].semitones)
         note_lists.append(chord)
 

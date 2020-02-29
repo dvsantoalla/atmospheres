@@ -1,4 +1,4 @@
-from notes import *
+from music.notes import *
 
 # Load up all notes from the NOTES array in the notes module
 # exec(foo + " = 'something else'")
@@ -68,17 +68,29 @@ DINSTR = [DBD, DSN, DHI, DCY]
 
 BEAT16_LEVELS = [
     {
+        DBD: [[.1, 0, 0, 0], [0], [0], [0]]
+    },
+    {
+        DBD: [[.250, 0, 0, 0], [0], [0], [0]]
+    },
+    {
+        DBD: [[.5, 0, 0, 0], [0], [0], [0]]
+    },
+    {
+        DBD: [[.75, 0, 0, 0], [0], [0], [0]]
+    },
+    {
         DBD: [[1, 0, 0, 0], [0], [0], [0]]
     },
     {
         DBD: [[1, 0, 0, 0], [0]]
     },
     {
-        DBD: [[1, 0, 0, 0], [0, 0, 1, 0]]
+        DBD: [[1, 0, 0, 0], [0, 0, .75, 0]]
     },
 
     {
-        DBD: [[1, 0, 0, 0], [0, 0, 1, 0]],
+        DBD: [[1, 0, 0, 0], [0, 0, .75, 0]],
         DSN: [[0, 0, 0, 0], [1, 0, 0, 0]]
     },
     {
@@ -88,16 +100,16 @@ BEAT16_LEVELS = [
         DCY: [[1, 0, 0, 0], [0], [0], [0]]
     },
     {
-        DSN: [[0], [1, 0, 1, 0]]
+        DSN: [[0], [1, 0, .75, 0]]
     },
     {
-        DHI: [[1, 0, .75, 0]]
+        DHI: [[.75, 0, .5, 0]]
     },
     {
         DBD: [[1, 0, .9, 0], [0, 0, .8, 0]]
     },
     {
-        DSN: [[0, 0, 1, 0], [1, 0, 1, 0]]
+        DSN: [[0, 0, .75, 0], [1, 0, .6, 0]]
     },
     {
         DSN: [[0, 0, .8, 0], [1, 0, .75, .5], [0, 0, .8, 0], [1, .5, 1, .75]]
@@ -131,10 +143,11 @@ BEAT16_LEVELS = [
 
 ]
 
+
 def expand_rhythm(beat):
     """ Always return 4 bars of 4 notes each for a total of 16 notes"""
 
-    beat = map(lambda x: expand_bar(x), beat)
+    beat = list(map(lambda x: expand_bar(x), beat))
     missing = 4-len(beat)
     if missing == 1:
         return beat.append(beat[2])
@@ -151,7 +164,7 @@ def expand_rhythm(beat):
 def expand_bar(bar):
     """ Expand a bar into 4 notes """
     missing = 4-len(bar)
-    #log.debug("Expanding bar %s, missing %s elements" % (bar,missing))
+    # log.debug("Expanding bar %s, missing %s elements" % (bar,missing))
     if missing == 1:
         return bar.append(bar[2])
     elif missing == 2:
@@ -162,9 +175,3 @@ def expand_bar(bar):
         return [0] * 4
     else:
         return bar[0:4]
-
-
-
-
-
-

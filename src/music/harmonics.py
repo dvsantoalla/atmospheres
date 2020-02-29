@@ -5,7 +5,7 @@
 import logging as log
 
 import numpy as np
-from csound import orchestra
+from csound import orchestra as orc
 from data import spline as sp
 
 
@@ -65,7 +65,6 @@ def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
 
 
 def reduce_harmonics(harms, starting_octave=0):
-
     reduced = []
     octaves_for_semitone = {key: [starting_octave] for key in range(0, 12)}
     for o, s in harms:
@@ -74,8 +73,8 @@ def reduce_harmonics(harms, starting_octave=0):
         reduced.append((octave, s))
     return reduced
 
-def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, range=[0,40]):
 
+def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, range=[0, 40]):
     end_of_piece = len(data) * step
     rng = range
 
@@ -87,14 +86,14 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, rang
     harm_step = (rng[1] - rng[0]) / float(len(harmonics))
     for i in np.arange(rng[0], rng[1], harm_step):
         log.debug("Getting roots for step %s" % i)
-        #ylines.append(i)
+        # ylines.append(i)
         f = sp.generate_spline([x - i for x in data], step=step)
         d = f.derivative()
         roots = f.roots()
         values = [(x, d(x)) for x in roots]
         notes_per_harmonic.append((i, values))
         log.debug("For level %s, roots %s" % (i, values))
-        #p = plt.plot_test_multi([[x - i for x in data]], additional_ys=ylines)
+        # p = plt.plot_test_multi([[x - i for x in data]], additional_ys=ylines)
 
     score = [";f1 0 16384 10 1 ; Sine wave",
              "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
@@ -131,8 +130,8 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, rang
 
         harm_idx += 1
 
-    instr = orchestra.table_modulated_basic_wave(instrument_number=instrument_number, oscillator_function_number=2,
-                                                 modulating_function_number=3, seq_length=end_of_piece,
-                                                 use_function_as_envelope=True)
+    instr = orc.table_modulated_basic_wave(instrument_number=instrument_number, oscillator_function_number=2,
+                                           modulating_function_number=3, seq_length=end_of_piece,
+                                           use_function_as_envelope=True)
 
     return [instr], score

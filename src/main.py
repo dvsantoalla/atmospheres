@@ -12,7 +12,7 @@ args = parser.parse_args()
 
 if args.debug:
     log.basicConfig(level=log.DEBUG)
-    log.warn("Debugging output enabled")
+    log.warning("Debugging output enabled")
 else: 
     log.basicConfig(level=log.INFO)
 
@@ -32,11 +32,11 @@ if args.test:
             tr = unittest.TextTestRunner(verbosity=2).run(s)
             test_results.append(tr)
         for t in test_results:
-            print "%s errors %s of %s" % (t, len(t.errors), t.testsRun)
+            log.error("%s errors %s of %s" % (t, len(t.errors), t.testsRun))
             if len(t.errors) > 0:
                 for err in t.errors:
                     for err2 in err:
-                        print "**** %s" % err2
+                        log.error("**** %s" % err2)
     else:
         #suite = unittest.TestLoader().loadTestsFromTestCase(TestSounds)
         suite = tl.loadTestsFromName(args.test)

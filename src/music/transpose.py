@@ -1,7 +1,7 @@
 import logging as log
 from itertools import cycle
 
-from notes import NOTE_NAMES, calculate_note_semitones, get_note
+from music.notes import NOTE_NAMES, calculate_note_semitones, get_note
 
 
 def get_note_name_distance(a, b):

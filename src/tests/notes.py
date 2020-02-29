@@ -19,6 +19,7 @@ class TestNotes(unittest.TestCase):
     def notest_notes_following_spline(self):
         """ Generate a stream of notes from a extended scale
         that follow the movement of one or several parameters"""
+
         gen.get_notes_following_spline(get(cc.T, location='Madrid'), cc.T, cnc.SCALES["major"], n.find("D"))
 
     def notest_transpose(self):
@@ -50,12 +51,11 @@ class TestNotes(unittest.TestCase):
         instr, score, headers = rhy.generate_drums()
         output.write_and_play(output.get_csd(instr, score, headers=headers))
 
-
     def test_drums_following_data(self):
 
         # ****** HARMONICS ***********
 
-        data1 = get(cc.T, location='Madrid')
+        # data1 = get(cc.T, location='Madrid')
         data1 = get(cc.C, location='Madrid')
         harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
         log.debug("Harmonics are %s" % harmonics)
@@ -64,10 +64,9 @@ class TestNotes(unittest.TestCase):
 
         f1 = sp.generate_spline(data1, step=10)
         interp_data1 = []
-        for i in range(0, (len(data1)-1)*10):
+        for i in range(0, (len(data1) - 1) * 10):
             interp_data1.append(f1(i))
 
-        # Thsi does not work...
         instr1, score1 = harm.sound_harmonics_from_data(harmonics, interp_data1, step=1, instrument_number=55,
                                                         range=(min(data1), max(data1)))
 
@@ -81,19 +80,21 @@ class TestNotes(unittest.TestCase):
         f2 = sp.generate_spline(data2, step=10)
 
         interp_data2 = []
-        for i in range(0, (len(data2)-1)*10):
+        for i in range(0, (len(data2) - 1) * 10):
             interp_data2.append(f2(i))
 
-        instr2, score2, headers = rhy.generate_drums(data=interp_data2, range=(min(data2), max(data2)), amplitude=10000)
-
+        rng = (min(data2), max(data2))
+        rng = (0, 10)
+        instr2, score2, headers = rhy.generate_drums(data=interp_data2, range=rng, amplitude=10000)
 
         # ***** PLOT AND RUN *************
 
         log.info("Plotting datasets with length %s and %s" % (len(interp_data1), len(interp_data2)))
-        plt.plot_score(score1)
-        plt.plot_test_multi([interp_data1, interp_data2])
 
-        #output.write_and_play(output.get_csd(instr1, score1, headers=headers))
-        #output.write_and_play(output.get_csd(instr2, score2, headers=headers))
-        output.write_and_play(output.get_csd(instr1+instr2, score1+score2, headers=headers))
+        # plt.plot_score(score1)
+        # plt.plot_test_multi([interp_data1, interp_data2])
 
+        # output.write_and_play(output.get_csd(instr1, score1, headers=headers))
+        # output.write_and_play(output.get_csd(instr2, score2, headers=headers))
+
+        output.write_and_play(output.get_csd(instr1 + instr2, score1 + score2, headers=headers))

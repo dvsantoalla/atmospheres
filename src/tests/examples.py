@@ -478,7 +478,7 @@ class TestShepardTones(unittest.TestCase):
         f = sp.generate_spline(data)
         self.basic_test(step_function=f)
 
-    def notest_speeding_slowing_following_data(self):
+    def test_speeding_slowing_following_data(self):
         data = get(td.W, location='Reading')
         self.run_speeding_slowing_following_data(data)
         data = map(lambda x: x * 40, np.hanning(40))

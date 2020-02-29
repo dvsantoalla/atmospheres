@@ -3,7 +3,7 @@ import random
 
 import matplotlib.pyplot as plt
 
-from spline import generate_spline
+from data.spline import generate_spline
 
 
 def plot_test_multi(datasets, step=1, file=None, additional_ys=[], show=True):
