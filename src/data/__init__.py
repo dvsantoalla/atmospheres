@@ -4,14 +4,17 @@ import os
 
 import data.constants as c
 
-"""
-Load data with the specified parameters. Can use the ATMOSPHERES_DATADIR environment
-variable to override the default value if the "datadir" option is not specified
-"""
-
 
 def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", dataset="10days", datatype="hres",
         datadir=None):
+    """
+    Load data with the specified parameters. Can use the ATMOSPHERES_DATADIR environment
+    variable to override the default value if the "datadir" option is not specified
+    """
+
+    log.debug("Retrieving data for %s in %s (%s,%s), date:%s%s, set:%s, type:%s" % (parameter, location,
+                                                                                    lat, lon, date, time, dataset,
+                                                                                    datatype))
 
     if datadir is None:
         datadir = os.environ.get("ATMOSPHERES_DATADIR", "../atmospheres-misc/data")
@@ -37,17 +40,29 @@ def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", da
 
                 minimum, maximum, avg = describe(data)
                 log.debug("Loaded %s values (min:%s, max:%s, avg:%s) from file '%s', parameter:%s, location:%s " % (
-                        len(data), minimum, maximum, avg, i, par, loc))
+                    len(data), minimum, maximum, avg, i, par, loc))
                 log.debug("Loaded values are %s " % str(data))
                 return data
 
-    log.warning("Cannot find any data at %s for the parameter '%s' and location '%s'. Files found: %s", datadir, parameter,
+    log.warning("Cannot find any data at %s for the parameter '%s' and location '%s'. Files found: %s", datadir,
+                parameter,
                 location, files)
     return None
 
 
-def describe(data):
+def get_raw(file):
+    f = open(file)
+    data = []
+    for line in f.readlines():
+        items = line.split()
+        if len(items) == 3:
+            data.append(items[2])
+        else:
+            log.warning("Ignoring line, too few elements: %s" % str(items))
+    return data
 
+
+def describe(data):
     log.debug(type(data))
     minimum = 1000000
     maximum = -1000000

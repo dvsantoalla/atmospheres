@@ -16,13 +16,13 @@ from music import transpose as t
 
 class TestNotes(unittest.TestCase):
 
-    def notest_notes_following_spline(self):
+    def test_notes_following_spline(self):
         """ Generate a stream of notes from a extended scale
         that follow the movement of one or several parameters"""
 
         gen.get_notes_following_spline(get(cc.T, location='Madrid'), cc.T, cnc.SCALES["major"], n.find("D"))
 
-    def notest_transpose(self):
+    def test_transpose(self):
 
         for i in (n.find("D"), n.find("B")):
             c = n.find("A").clone()
@@ -46,9 +46,9 @@ class TestNotes(unittest.TestCase):
 
         log.debug(stream)
 
-    def notest_drums_range(self):
+    def test_drums_range(self):
 
-        instr, score, headers = rhy.generate_drums()
+        instr, score, headers = rhy.generate_drums(data=range(0, 30), rng=(0, 30))
         output.write_and_play(output.get_csd(instr, score, headers=headers))
 
     def test_drums_following_data(self):
@@ -85,7 +85,7 @@ class TestNotes(unittest.TestCase):
 
         rng = (min(data2), max(data2))
         rng = (0, 10)
-        instr2, score2, headers = rhy.generate_drums(data=interp_data2, range=rng, amplitude=10000)
+        instr2, score2, headers = rhy.generate_drums(data=interp_data2, rng=rng, amplitude=10000)
 
         # ***** PLOT AND RUN *************
 

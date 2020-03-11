@@ -80,7 +80,7 @@ class TestHarmonics(unittest.TestCase):
         data = get(td.T, location='Madrid')
         instr, score = harm.sound_harmonics_from_data(harmonics, data, step=4)
 
-        plt.plot_score(score)
+        # plt.plot_score(score)
         output.write_and_play(output.get_csd(instr, score))
 
 
@@ -88,7 +88,7 @@ class TestHarmonics(unittest.TestCase):
 
 class TestSineWavesPerParameter(unittest.TestCase):
 
-    def notest_simple_soundwaves(self):
+    def test_simple_soundwaves(self):
         test_simple_soundwaves(osc=1)
 
 
@@ -97,7 +97,7 @@ class TestSineWaveModulatedInPitchAmplitude(unittest.TestCase):
     two parameters modulating pitch and amplitude of the first oscillator 
     and the second two parameters the second oscillator """
 
-    def notest_both(self):
+    def test_both(self):
         test_simple_soundwaves(osc=2)
 
 
@@ -112,7 +112,7 @@ class TestSineWaveWithModulatedDetune(unittest.TestCase):
 
 class TestPlucksInScale(unittest.TestCase):
 
-    def no_test_scale_wgpluck2(self):
+    def test_scale_wgpluck2(self):
         """ wgpluck seems to sound a bit better, so let's mothball this for a while"""
 
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
@@ -122,7 +122,7 @@ class TestPlucksInScale(unittest.TestCase):
             score.append("i1 %s 1.25 30000 %s.%02d" % (i, notes[i].octave, notes[i].semitones))
         output.write_and_play(output.get_csd([plucker], score))
 
-    def no_test_scale_wgpluck(self):
+    def ntest_scale_wgpluck(self):
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
         plucker = orchestra.wgpluck(instrument_number=1, function_number=1)
         score = [
@@ -131,7 +131,7 @@ class TestPlucksInScale(unittest.TestCase):
             score.append("i1 %s 1 30000 %s.%02d" % (i, notes[i].octave, notes[i].semitones))
         output.write_and_play(output.get_csd([plucker], score))
 
-    def notest_scale_wgpluck_with_rhythm(self):
+    def test_scale_wgpluck_with_rhythm(self):
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
         rhythms = gen.get_events_following_spline(get(td.W, location='Madrid'), td.W, cnc.RHYTHM_STABILITY)
 
@@ -174,14 +174,17 @@ class TestGranularSynthesis(unittest.TestCase):
 
 class TestDifferentPieceLengths(unittest.TestCase):
 
-    def notest_short_one(self):
+    def test_short_one(self):
         test_simple_soundwaves(osc=2, duration=10)
+        return True
 
-    def notest_medium_one(self):
+    def test_medium_one(self):
         test_simple_soundwaves(osc=2, duration=60)
+        return True
 
-    def notest_long_one(self):
+    def test_long_one(self):
         test_simple_soundwaves(osc=2, duration=120)
+        return True
 
 
 class TestShepardTones(unittest.TestCase):
@@ -452,27 +455,27 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def notest_simple_ascending(self):
+    def test_simple_ascending(self):
         self.basic_test(step_factor=1)
 
-    def notest_simple_descending(self):
+    def test_simple_descending(self):
         self.basic_test(reverse=True)
 
-    def notest_simple_speeding_up(self):
+    def test_simple_speeding_up(self):
         self.basic_test(step_factor=.995)
 
-    def notest_simple_slowing_down(self):
+    def test_simple_slowing_down(self):
         self.basic_test(step_factor=1.005, initial_step=0.1)
 
-    def notest_ascending_descending_hanning(self):
+    def test_ascending_descending_hanning(self):
         h = np.hanning(210)
         log.debug(h)
         self.basic_test(step_list=h, use_step_derivative=True)
 
-    def notest_speeding_slowing(self):
+    def test_speeding_slowing(self):
         pass
 
-    def notest_ascending_descending_following_data(self):
+    def test_ascending_descending_following_data(self):
         data = get(td.T, location='Madrid')
         log.debug("The number of data points is %s" % len(data))
         f = sp.generate_spline(data)
@@ -481,7 +484,7 @@ class TestShepardTones(unittest.TestCase):
     def test_speeding_slowing_following_data(self):
         data = get(td.W, location='Reading')
         self.run_speeding_slowing_following_data(data)
-        data = map(lambda x: x * 40, np.hanning(40))
+        data = list(map(lambda x: x * 40, np.hanning(40)))
         self.run_speeding_slowing_following_data(data)
 
     def run_speeding_slowing_following_data(self, data, use_segments=True):
@@ -515,5 +518,5 @@ class TestShepardTones(unittest.TestCase):
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
                                                      use_function_as_envelope=True)
-        plt.plot_score(score)
+        # plt.plot_score(score)
         output.write_and_play(output.get_csd([instr], score))

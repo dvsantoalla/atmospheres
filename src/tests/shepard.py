@@ -8,14 +8,13 @@ from music import shepard as shep
 
 class TestShepard(unittest.TestCase):
 
-
     def test_shepard(self):
 
         scale = cnc.SCALES["major"]
         for n in scale:
             n.octave += 1
 
-        notes = shep.generate_list(scale,length=30,levels=10)
+        notes = shep.generate_list(scale, length=30, levels=10)
         log.debug("Notes: %s " % (notes))
 
         step = 0.25
@@ -27,19 +26,17 @@ class TestShepard(unittest.TestCase):
             score.append("; Writing out %s" % chord)
             for note in chord:
                 amp = note[0]
-                pitch = "%s.%02d" % (note[1].octave,note[1].semitones)
-                score.append("i1 %s %s %s %s %s  ; %s " % (time, duration, amp*5000, pitch, note))
+                pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
+                score.append("i1 %s %s %s %s; %s " % (time, duration, amp * 5000, pitch, note))
             time += step
 
-        score.insert(0,"f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth")
-        score.insert(0,"f 1 0 16384 10 1")
+        score.insert(0, "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth")
+        score.insert(0, "f 1 0 16384 10 1")
         pluck = orchestra.basic_wave(instrument_number=1)
         output.write_and_play(output.get_csd([pluck], score))
 
-
         pluck = orchestra.basic_wave(instrument_number=1, function_number=2)
         output.write_and_play(output.get_csd([pluck], score))
-
 
     def test_shepard_hanning(self):
 
@@ -69,12 +66,12 @@ class TestShepard(unittest.TestCase):
 
         if use_index:
             instr1 = orchestra.table_modulated_basic_wave(instrument_number=1, modulating_function_number=3,
-                                                        seq_length=seq_length)
+                                                          seq_length=seq_length)
             instr2 = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                           modulating_function_number=3, seq_length=seq_length)
         else:
-            instr1 = orchestra.basic_wave(instrument_number=1) # Sine wave
-            instr2 = orchestra.basic_wave(instrument_number=1, function_number=2) # That is, sawtooth
+            instr1 = orchestra.basic_wave(instrument_number=1)  # Sine wave
+            instr2 = orchestra.basic_wave(instrument_number=1, function_number=2)  # That is, sawtooth
 
         for chord in notes:
 
@@ -95,8 +92,3 @@ class TestShepard(unittest.TestCase):
 
         output.write_and_play(output.get_csd([instr1], score))
         output.write_and_play(output.get_csd([instr2], score))
-
-
- 	
-
-

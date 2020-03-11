@@ -42,14 +42,24 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     out.write(csdcontent)
     out.close()
 
-    csound = os.environ.get("CSOUND","csound")
-    log.info("Using csound binary: %s" % csound)
+    csound = os.environ.get("CSOUND", "csound")
+    log.debug("Using csound binary: %s" % csound)
 
     # run generation out to device or wav file
     proc = Popen([csound, tempfile], stdout=PIPE, stderr=PIPE)
-    for line in iter(proc.stderr.readline, ''):
-        log.debug(line.rstrip())
+    if DAC:
+        for line in iter(proc.stderr.readline, ''):
+            log.debug(line.rstrip())
     rc = proc.returncode
-    log.debug(proc.stdout.readlines())
+
+    if not DAC:
+        errout = proc.stderr.readlines()
+        for ln in errout:
+            log.debug(ln)
+
+    stdout = proc.stdout.readlines()
+    for ln in stdout:
+        log.debug(ln)
+
 
 # Optionally play and/or archive the audio file
