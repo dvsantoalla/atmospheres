@@ -24,7 +24,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: pip3 install matplotlib; pip3 install scipy; python3 src/main.py -t all
+        run: pip3 install matplotlib scipy pytest; pytest src/
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
