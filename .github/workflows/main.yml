@@ -35,6 +35,9 @@ jobs:
          python-version: ${{ matrix.python-version }}
 
       # Runs a single command using the runners shell
+      - name: See what's there 
+        run: pwd; ls -laR
+
       - name: Install dependencies
         run: pip install matplotlib scipy pytest
 
