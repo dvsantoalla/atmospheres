@@ -33,7 +33,7 @@ if args.test:
             tr = unittest.TextTestRunner(verbosity=2).run(s)
             test_results.append(tr)
         for t in test_results:
-            print "%s errors %s of %s" % (t, len(t.errors), t.testsRun)
+            print("%s errors %s of %s" % (t, len(t.errors), t.testsRun))
             if len(t.errors) > 0:
                 for err in t.errors:
                     for err2 in err:
