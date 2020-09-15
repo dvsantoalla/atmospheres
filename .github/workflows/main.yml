@@ -26,7 +26,7 @@ jobs:
         with:
                 repository: dvsantoalla/atmospheres-misc
                 token: ${{ secrets.ACCESS_TOKEN }}
-                path: atmospheres-misc
+                path: ../atmospheres-misc
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
