@@ -40,7 +40,9 @@ jobs:
         run: pwd; ls -laR
 
       - name: Install dependencies
-        run: pip install matplotlib scipy pytest
+        run: |
+          pip install matplotlib scipy pytest
+          sudo apt-get install csound
 
       # Runs a set of commands using the runners shell
       - name: Run pytest 
