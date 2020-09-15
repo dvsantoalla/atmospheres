@@ -29,4 +29,4 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run pytest 
         run: |
-          pytest src/ 
+          python -m pytest src/ 
