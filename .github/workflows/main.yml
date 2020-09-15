@@ -43,4 +43,4 @@ jobs:
         run: |
           python -m pytest src/  
         env:
-                ATMOSPHERES_DATADIR: atmospheres-misc/data
+                ATMOSPHERES_DATADIR: /home/runner/work/atmospheres/atmospheres/atmospheres-misc/data
