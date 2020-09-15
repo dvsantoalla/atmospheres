@@ -37,7 +37,7 @@ if args.test:
             if len(t.errors) > 0:
                 for err in t.errors:
                     for err2 in err:
-                        print "**** %s" % err2
+                        print("**** %s" % err2)
     else:
         #suite = unittest.TestLoader().loadTestsFromTestCase(TestSounds)
         suite = tl.loadTestsFromName(args.test)
