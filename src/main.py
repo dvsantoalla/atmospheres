@@ -1,7 +1,8 @@
 import argparse
 
-from tests.notes import *
-from tests.sounds import *
+import sys
+from tests.notes_test import *
+from tests.sounds_test import *
 import csound.output
 
 parser = argparse.ArgumentParser()
@@ -9,21 +10,24 @@ parser.add_argument('-t', '--test', help="Run the following tests or 'all'")
 parser.add_argument('-o', '--output', help="Write output to a file instead of DAC")
 parser.add_argument('-d', '--debug', action='store_true')
 
-args = parser.parse_args()
+if not "pytest" in sys.modules:
+    args = parser.parse_args(sys.argv[1:])
+    pytesting = False
+else:
+    args = None
+    pytesting = True
 
-if args.debug:
+if pytesting or args and args.debug:
     log.basicConfig(level=log.DEBUG)
     log.warning("Debugging output enabled")
 else: 
     log.basicConfig(level=log.INFO)
 
-if args.output:
+if args and args.output:
     csound.output.DAC = False
     csound.output.FILENAME = args.output
 
-if args.test:
-    csound.output.DAC = False
-    csound.output.FILENAME = "test.wav"
+if args and args.test:
     log.info("Testing %s" % args.test)
     tl = unittest.TestLoader()
     if args.test == "all":

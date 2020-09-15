@@ -1,5 +1,6 @@
 import logging as log
 import os
+import sys
 from subprocess import Popen, PIPE
 
 DAC = True
@@ -7,7 +8,10 @@ FILENAME = "output.wav"
 
 
 def get_csd(orchestra, score, headers=[]):
-    if DAC:
+
+    if "pytest" in sys.modules:
+        output_file = "-o pytest.wav"
+    elif DAC:
         output_file = "-odac"
     else:
         output_file = "-o %s" % FILENAME
@@ -42,17 +46,22 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     out.write(csdcontent)
     out.close()
 
+    if "pytest" in sys.modules:
+        use_dac = False
+    else:
+        use_dac = DAC
+
     csound = os.environ.get("CSOUND", "csound")
     log.debug("Using csound binary: %s" % csound)
 
     # run generation out to device or wav file
     proc = Popen([csound, tempfile], stdout=PIPE, stderr=PIPE)
-    if DAC:
+    if use_dac:
         for line in iter(proc.stderr.readline, ''):
             log.debug(line.rstrip())
     rc = proc.returncode
 
-    if not DAC:
+    if not use_dac:
         errout = proc.stderr.readlines()
         for ln in errout:
             log.debug(ln)
