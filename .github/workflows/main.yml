@@ -24,7 +24,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
         with:
-                repository: dvsantoalla/atmospheres-misc@develop
+                repository: dvsantoalla/atmospheres-misc
+                ref: develop
                 token: ${{ secrets.ACCESS_TOKEN }}
                 path: atmospheres-misc
 
