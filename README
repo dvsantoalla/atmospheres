@@ -50,6 +50,11 @@ The concepts of stable/unstable belong both in music and in meteorology
 - What for Rhythm? The grind between a 2-based and a 3,4,5,6,7.. Polyrhythms. Rhythmic tension between stable/unstable beats
 - Use Shepard tones (https://en.wikipedia.org/wiki/Shepard_tone) to convey a send of continues ascension or descension
 - Changes in modes could be useful as ways of conveying meaning? https://en.wikipedia.org/wiki/Mode_(music)
+- What about quadraphonic sound to map not only wind intensity but direction.
+    Wind could come from the right place in a 2D space
+- Should we accept that some days are going to sound pretty boring? Or should we try all to sound interesting,
+    even if the weather isn't. I would go for the first option
+- At some point we could consider including some Machine Learning scenarios, based in a number of presets.
 
 * Technical issues
 
@@ -57,5 +62,7 @@ The concepts of stable/unstable belong both in music and in meteorology
 
  - matplotlib for debugging and showing off
  - scipy
+
+- Other requirements
  - Csound for realtime playing or batch-mode (generate orchestra+score then render)?
 

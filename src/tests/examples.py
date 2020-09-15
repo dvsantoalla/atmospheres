@@ -1,21 +1,21 @@
-import sys
-import unittest
 import logging as log
+import unittest
+
+import data.plot as plt
 import numpy as np
-import scipy.optimize as opt
 from csound import output, orchestra
 from csound.orchestra import gen08
-from music import concepts as cnc
-from music import generation as gen
-from music import notes as n
-from music import shepard as shep
-from music import harmonics as harm
 from data import constants as td
 from data import get
 from data import spline as sp
+from music import concepts as cnc
+from music import generation as gen
+from music import harmonics as harm
+from music import notes as n
+from music import shepard as shep
 
 
-def notest_simple_soundwaves(osc=1, duration=30):
+def test_simple_soundwaves(osc=1, duration=30):
     """ Play a sine wave for each of the parameters of Madrid in 2014. Depending on the osc parameter
     1: Play four sine waves following each of 2t, p, w, c
     2: Play two sine waves, modulated in frequency and amplitude, the first by 2t and w, the second by p and c
@@ -52,8 +52,8 @@ def notest_simple_soundwaves(osc=1, duration=30):
     elif osc == 3:
         oscillator = orchestra.oscillator_dual(points, instrument_number=3)
         events = [
-            "i3 0 %s 10000 2 3 ; " % duration,
-            "i3 0 %s 10000 5 4 ; " % duration,
+            "i3 0 %s 5000 2 3 ; " % duration,
+            "i3 0 %s 5000 5 4 ; " % duration,
         ]
 
     score = ["f1 0 8192 10 1  ; Table containing a sine wave.",
@@ -69,28 +69,26 @@ def notest_simple_soundwaves(osc=1, duration=30):
 
 class TestHarmonics(unittest.TestCase):
 
-    def test_harmonics(self):
+    def test_harmonics(self, step=1):
+
+        harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
+        log.debug("Harmonics are %s" % harmonics)
+
+        harmonics = harm.reduce_harmonics(harmonics, starting_octave=5)
+        log.debug("Reduced Harmonics are %s" % harmonics)
+
         data = get(td.T, location='Madrid')
-        rng = [0, 40]
-        harmonics = harm.generate_notes_from_harmonic_series()
-        cut_points = []
+        instr, score = harm.sound_harmonics_from_data(harmonics, data, step=4)
 
-        log.debug("The number of data points is %s, number of harmonics is %s" % (len(data), len(harmonics)))
-        step = (rng[1]-rng[0]) / float(len(harmonics))
-        for i in np.arange(rng[0], rng[1], step):
-            log.debug("Getting roots for step %s" % i)
-            f = sp.generate_spline([x - i for x in data])
-            cut_points.append((i, f.roots()))
-
-        log.debug(cut_points)
-
+        # plt.plot_score(score)
+        output.write_and_play(output.get_csd(instr, score))
 
 
 
 
 class TestSineWavesPerParameter(unittest.TestCase):
 
-    def notest_simple_soundwaves(self):
+    def test_simple_soundwaves(self):
         test_simple_soundwaves(osc=1)
 
 
@@ -99,7 +97,7 @@ class TestSineWaveModulatedInPitchAmplitude(unittest.TestCase):
     two parameters modulating pitch and amplitude of the first oscillator 
     and the second two parameters the second oscillator """
 
-    def notest_both(self):
+    def test_both(self):
         test_simple_soundwaves(osc=2)
 
 
@@ -108,13 +106,13 @@ class TestSineWaveWithModulatedDetune(unittest.TestCase):
     will control how much is the second sine wave detuned in relation to the first, creating a "beat" between both.
     We have to see how a parameter should translate into "beat" as closer waves can sound more "unstable" that two further away"""
 
-    def notest_modulated_dissonance(self):
+    def test_modulated_dissonance(self):
         test_simple_soundwaves(osc=3)
 
 
 class TestPlucksInScale(unittest.TestCase):
 
-    def no_test_scale_wgpluck2(self):
+    def test_scale_wgpluck2(self):
         """ wgpluck seems to sound a bit better, so let's mothball this for a while"""
 
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
@@ -124,7 +122,7 @@ class TestPlucksInScale(unittest.TestCase):
             score.append("i1 %s 1.25 30000 %s.%02d" % (i, notes[i].octave, notes[i].semitones))
         output.write_and_play(output.get_csd([plucker], score))
 
-    def no_test_scale_wgpluck(self):
+    def ntest_scale_wgpluck(self):
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
         plucker = orchestra.wgpluck(instrument_number=1, function_number=1)
         score = [
@@ -133,7 +131,7 @@ class TestPlucksInScale(unittest.TestCase):
             score.append("i1 %s 1 30000 %s.%02d" % (i, notes[i].octave, notes[i].semitones))
         output.write_and_play(output.get_csd([plucker], score))
 
-    def notest_scale_wgpluck_with_rhythm(self):
+    def test_scale_wgpluck_with_rhythm(self):
         notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
         rhythms = gen.get_events_following_spline(get(td.W, location='Madrid'), td.W, cnc.RHYTHM_STABILITY)
 
@@ -176,14 +174,17 @@ class TestGranularSynthesis(unittest.TestCase):
 
 class TestDifferentPieceLengths(unittest.TestCase):
 
-    def notest_short_one(self):
+    def test_short_one(self):
         test_simple_soundwaves(osc=2, duration=10)
+        return True
 
-    def notest_medium_one(self):
+    def test_medium_one(self):
         test_simple_soundwaves(osc=2, duration=60)
+        return True
 
-    def notest_long_one(self):
+    def test_long_one(self):
         test_simple_soundwaves(osc=2, duration=120)
+        return True
 
 
 class TestShepardTones(unittest.TestCase):
@@ -341,7 +342,6 @@ class TestShepardTones(unittest.TestCase):
             absaccumdiff = 0
             notes_vals = []
 
-
             for ngap in np.arange(0, ngapvals):  # Every gap
                 # Have to map the increment in value to gap length
                 intval0 = value_function(nii)
@@ -352,17 +352,17 @@ class TestShepardTones(unittest.TestCase):
                 segmentdiff += diff
                 chordidx = get_chordidx_from_value(intval1)
                 log.debug("gap %s: Inner diff (f(%s)-f(%s)) is %s" % (ngap, nii, nii - gapsize, diff))
-                notes_vals.append((nii,diff,chordidx))
+                notes_vals.append((nii, diff, chordidx))
 
             log.debug("The segment accum diff is %s, absolute accum diff %s,  value gap is %s, error %s "
-                                                % (segmentdiff, absaccumdiff, valuegap, segmentdiff - valuegap))
+                      % (segmentdiff, absaccumdiff, valuegap, segmentdiff - valuegap))
             t = time
             for chordval in notes_vals:
                 chordidx = chordval[2]
                 diff = chordval[1]
                 log.debug("Diff is %s, absaccumdim is %s" % (diff, absaccumdiff))
                 # The duration should be the proportion of this diff from the total accumulated diff
-                duration = abs(diff*outer_step)/absaccumdiff if diff != 0 and absaccumdiff != 0 else outer_step
+                duration = abs(diff * outer_step) / absaccumdiff if diff != 0 and absaccumdiff != 0 else outer_step
                 assert not np.isnan(duration)
 
                 chord = notes[chordidx]
@@ -374,10 +374,6 @@ class TestShepardTones(unittest.TestCase):
                     pitch = "%s.%02d" % (note[1].octave, note[1].semitones)
                     score.append("i1 %s %s %s %s \t; %s " % (t, duration, amp, pitch, note))
                 t += duration
-
-
-
-
 
             # inner_step = outer_step / abs(chordindex1 - chordindex0) if chordindex0 != chordindex1 else outer_step
             # log.debug("ni %s: ** Previous Noteindex %s of %s, value %s, local step %s" %
@@ -459,36 +455,36 @@ class TestShepardTones(unittest.TestCase):
 
         return score
 
-    def notest_simple_ascending(self):
+    def test_simple_ascending(self):
         self.basic_test(step_factor=1)
 
-    def notest_simple_descending(self):
+    def test_simple_descending(self):
         self.basic_test(reverse=True)
 
-    def notest_simple_speeding_up(self):
+    def test_simple_speeding_up(self):
         self.basic_test(step_factor=.995)
 
-    def notest_simple_slowing_down(self):
+    def test_simple_slowing_down(self):
         self.basic_test(step_factor=1.005, initial_step=0.1)
 
-    def notest_ascending_descending_hanning(self):
+    def test_ascending_descending_hanning(self):
         h = np.hanning(210)
         log.debug(h)
         self.basic_test(step_list=h, use_step_derivative=True)
 
-    def notest_speeding_slowing(self):
+    def test_speeding_slowing(self):
         pass
 
-    def notest_ascending_descending_following_data(self):
+    def test_ascending_descending_following_data(self):
         data = get(td.T, location='Madrid')
         log.debug("The number of data points is %s" % len(data))
         f = sp.generate_spline(data)
         self.basic_test(step_function=f)
 
-    def notest_speeding_slowing_following_data(self):
-        data = get(td.T, location='Madrid')
+    def test_speeding_slowing_following_data(self):
+        data = get(td.W, location='Reading')
         self.run_speeding_slowing_following_data(data)
-        data = map(lambda x: x * 40, np.hanning(40))
+        data = list(map(lambda x: x * 40, np.hanning(40)))
         self.run_speeding_slowing_following_data(data)
 
     def run_speeding_slowing_following_data(self, data, use_segments=True):
@@ -506,7 +502,7 @@ class TestShepardTones(unittest.TestCase):
 
         notes = shep.generate_list(scale, length=30, levels=levels, give_index_instead_of_amplitudes=True)
         # log.debug("Using list of notes: %s" % str(notes))
-        score = ["f 1 0 16384 10 1",
+        score = ["f 1 0 16384 10 1 ; Sine wave",
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
                  "f3 0 16384 20 2 1 ; Hanning window"]
 
@@ -522,4 +518,5 @@ class TestShepardTones(unittest.TestCase):
         instr = orchestra.table_modulated_basic_wave(instrument_number=1, oscillator_function_number=2,
                                                      modulating_function_number=3, seq_length=seq_length,
                                                      use_function_as_envelope=True)
+        # plt.plot_score(score)
         output.write_and_play(output.get_csd([instr], score))

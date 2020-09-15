@@ -1,6 +1,7 @@
-import spline
 import logging as log
-import constants as c
+
+import spline
+
 
 def get_oscilation_test_data(startvalue,slope=0,oscilations=10,initial_oscilation_amplitude=1,
                              final_oscilation_amplitude=20,number_of_values=40,interpolated=True):

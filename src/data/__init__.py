@@ -1,58 +1,77 @@
-import os
 import json
 import logging as log
-import constants as c
+import os
 
-"""
-Load data with the specified parameters. Can use the ATMOSPHERES_DATADIR environment
-variable to override the default value if the "datadir" option is not specified
-"""
+import data.constants as c
 
-def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", dataset="10days", datatype="hres", datadir = None ):
+
+def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", dataset="10days", datatype="hres",
+        datadir=None):
+    """
+    Load data with the specified parameters. Can use the ATMOSPHERES_DATADIR environment
+    variable to override the default value if the "datadir" option is not specified
+    """
+
+    log.debug("Retrieving data for %s in %s (%s,%s), date:%s%s, set:%s, type:%s" % (parameter, location,
+                                                                                    lat, lon, date, time, dataset,
+                                                                                    datatype))
 
     if datadir is None:
-        if os.environ.has_key("ATMOSPHERES_DATADIR"):
-            datadir = os.environ.get("ATMOSPHERES_DATADIR")
-        else:
-            datadir = "../atmospheres-misc/data"
+        datadir = os.environ.get("ATMOSPHERES_DATADIR", "../atmospheres-misc/data")
 
     data = {}
     files = os.listdir(datadir)
-    log.debug("Files found in data dir %s: %s" % (datadir,files))
+    log.debug("Files found in data dir %s: %s" % (datadir, files))
     files.sort()
     for i in files:
         if i.endswith(".json"):
             bits = i.split("-")
             loc = bits[0]
             par = bits[1]
-            if loc==location and par==parameter:
-                log.debug("Loading data from %s, place:%s, param:%s " % (i,loc,par))
-                data = json.load(open(datadir+"/"+i))[parameter][datatype]
+            if loc == location and par == parameter:
+                log.debug("Loading data from %s, place:%s, param:%s " % (i, loc, par))
+                data = json.load(open(datadir + "/" + i))[parameter][datatype]
                 if parameter == c.T:
-                    data = map(lambda x:x-273.15,data)
+                    data = list(map(lambda x: x - 273.15, data))
                 elif parameter == c.C:
-                    data = map(lambda x:x*8,data)
+                    data = list(map(lambda x: x * 8, data))
                 elif parameter == c.P:
-                    data = map(lambda x:x*1000,data)
+                    data = list(map(lambda x: x * 1000, data))
 
-                min,max,avg = describe(data)
-                log.debug("Loaded %s values (min:%s, max:%s, avg:%s) from file '%s', parameter:%s, location:%s " % (len(data),min,max,avg,i,par, loc))
+                minimum, maximum, avg = describe(data)
+                log.debug("Loaded %s values (min:%s, max:%s, avg:%s) from file '%s', parameter:%s, location:%s " % (
+                    len(data), minimum, maximum, avg, i, par, loc))
                 log.debug("Loaded values are %s " % str(data))
                 return data
 
-    log.warn("Cannot find any data at %s for the parameter '%s' and location '%s'. Files found: %s", datadir, parameter, location, files)
+    log.warning("Cannot find any data at %s for the parameter '%s' and location '%s'. Files found: %s", datadir,
+                parameter,
+                location, files)
     return None
 
 
+def get_raw(file):
+    f = open(file)
+    data = []
+    for line in f.readlines():
+        items = line.split()
+        if len(items) == 3:
+            data.append(items[2])
+        else:
+            log.warning("Ignoring line, too few elements: %s" % str(items))
+    return data
+
+
 def describe(data):
-    min=1000000
-    max=-1000000
-    total=0
+    log.debug(type(data))
+    minimum = 1000000
+    maximum = -1000000
+    total = 0
     for i in data:
-        if i<min:
-            min=i
-        if i>max:
-            max=i
+        if i < minimum:
+            minimum = i
+        if i > maximum:
+            maximum = i
         total += i
 
-    return min,max,total/len(data)
+    return minimum, maximum, total / len(data)
