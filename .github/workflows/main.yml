@@ -22,8 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/checkout@v2
         with:
+                repository: dvsantoalla/atmospheres
                 repository: dvsantoalla/atmospheres-misc
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
