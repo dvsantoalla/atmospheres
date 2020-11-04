@@ -4,4 +4,4 @@ import logging as log
 class Studio:
 
     def play(self):
-        log.warn("Method play must be implemented")
+        log.warning("Method play must be implemented")

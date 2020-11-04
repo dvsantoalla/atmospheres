@@ -7,7 +7,7 @@ from data import plot as pl
 
 class TestGraphics(unittest.TestCase):
 
-    def test_ploting(self):
+    def test_plotting(self):
 
         place = "Madrid"
         place = "Reading"
@@ -17,6 +17,6 @@ class TestGraphics(unittest.TestCase):
         madw = get(c.W, location=place)
         madc = get(c.C, location=place)
 
-        pl.plot_test_multi([mad2t,madp,madw,madc], file="test_plotting.png")
+        pl.plot_test_multi([mad2t, madp, madw, madc], file="test_plotting.png")
 
 

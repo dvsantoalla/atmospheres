@@ -10,7 +10,7 @@ def get_note_name_distance(a, b):
     notenames = cycle(NOTE_NAMES)
 
     name = next(notenames)
-    while (True):
+    while True:
         if found and name == b.name:
             return distance + 1
         elif found:
