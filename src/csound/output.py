@@ -58,8 +58,13 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     proc = Popen([csound, tempfile], stdout=PIPE, stderr=PIPE)
     if use_dac:
         for line in iter(proc.stderr.readline, ''):
-            log.debug(line.rstrip())
+            error_line = line.rstrip()
+            if len(error_line) == 0:
+                break
+            else:
+                log.debug(error_line.rstrip())
     rc = proc.returncode
+    log.debug("Process %s returned code %s from %s" % (csound, rc, proc))
 
     if not use_dac:
         errout = proc.stderr.readlines()

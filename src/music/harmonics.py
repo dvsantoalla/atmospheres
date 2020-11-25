@@ -74,12 +74,12 @@ def reduce_harmonics(harms, starting_octave=0):
     return reduced
 
 
-def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, range=[0, 40]):
+def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, value_range=[0, 40]):
     end_of_piece = len(data) * step
-    rng = range
+    rng = value_range
 
     notes_per_harmonic = []
-    ylines = [0]
+    # ylines = [0]
 
     log.info("The number of data points is %s, number of harmonics is %s, value range is %s" %
              (len(data), len(harmonics), rng))

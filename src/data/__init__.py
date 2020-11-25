@@ -6,18 +6,20 @@ import data.constants as c
 
 
 def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", dataset="10days", datatype="hres",
-        datadir=None):
+        datadir=None, test=True):
     """
     Load data with the specified parameters. Can use the ATMOSPHERES_DATADIR environment
     variable to override the default value if the "datadir" option is not specified
     """
 
-    log.debug("Retrieving data for %s in %s (%s,%s), date:%s%s, set:%s, type:%s" % (parameter, location,
+    log.debug("Retrieving data for %s in %s (%s,%s), date:%s%s, set:%s, type:%s, test=%s" % (parameter, location,
                                                                                     lat, lon, date, time, dataset,
-                                                                                    datatype))
+                                                                                    datatype, test))
 
     if datadir is None:
         datadir = os.environ.get("ATMOSPHERES_DATADIR", "../atmospheres-misc/data")
+    if test:
+        datadir += "/Test"
 
     data = {}
     files = os.listdir(datadir)

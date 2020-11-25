@@ -65,6 +65,7 @@ DINSTR = [DBD, DSN, DHI, DCY]
 # Each successive level only records whatever is different from the
 # previous, empty meaning the instrument does not sound
 # All these beats are based in a pattern of 16 notes per bar
+# A zero means no sound (default), a number>0 represents the volume
 
 BEAT16_LEVELS = [
     {
