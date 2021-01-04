@@ -11,7 +11,7 @@ from data import spline as sp
 from music import concepts as cnc
 from music import generation as gen
 from music import harmonics as harm
-from music import notes as n
+from music import notes as nt
 from music import shepard as shep
 
 
@@ -34,6 +34,8 @@ def test_simple_soundwaves(osc=1, duration=30):
     # write orchestra + score
 
     points = 16777216
+    events = None
+    oscillator = None
     if osc == 1:
         oscillator = orchestra.oscillator1(points, instrument_number=1)
         events = [
@@ -69,8 +71,7 @@ def test_simple_soundwaves(osc=1, duration=30):
 
 class TestHarmonics(unittest.TestCase):
 
-    def test_harmonics(self, step=1):
-
+    def test_harmonics(self):
         harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
         log.debug("Harmonics are %s" % harmonics)
 
@@ -80,10 +81,8 @@ class TestHarmonics(unittest.TestCase):
         data = get(td.T, location='Madrid')
         instr, score = harm.sound_harmonics_from_data(harmonics, data, step=4)
 
-        # plt.plot_score(score)
+        plt.plot_score(score)
         output.write_and_play(output.get_csd(instr, score))
-
-
 
 
 class TestSineWavesPerParameter(unittest.TestCase):
@@ -102,9 +101,10 @@ class TestSineWaveModulatedInPitchAmplitude(unittest.TestCase):
 
 
 class TestSineWaveWithModulatedDetune(unittest.TestCase):
-    """ In this case there will be two sine waves with a pitch following a parameter. A second parameter
-    will control how much is the second sine wave detuned in relation to the first, creating a "beat" between both.
-    We have to see how a parameter should translate into "beat" as closer waves can sound more "unstable" that two further away"""
+    """ In this case there will be two sine waves with a pitch following a parameter.
+    A second parameter will control how much is the second sine wave detuned in relation
+    to the first, creating a "beat" between both. We have to see how a parameter should
+    translate into "beat" as closer waves can sound more "unstable" that two further away"""
 
     def test_modulated_dissonance(self):
         test_simple_soundwaves(osc=3)
@@ -115,15 +115,15 @@ class TestPlucksInScale(unittest.TestCase):
     def test_scale_wgpluck2(self):
         """ wgpluck seems to sound a bit better, so let's mothball this for a while"""
 
-        notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
+        notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], nt.find("D"))
         plucker = orchestra.wgpluck2(instrument_number=1)
         score = []
         for i in range(0, len(notes)):
             score.append("i1 %s 1.25 30000 %s.%02d" % (i, notes[i].octave, notes[i].semitones))
         output.write_and_play(output.get_csd([plucker], score))
 
-    def ntest_scale_wgpluck(self):
-        notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
+    def test_scale_wgpluck(self):
+        notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], nt.find("D"))
         plucker = orchestra.wgpluck(instrument_number=1, function_number=1)
         score = [
             "f 1 0 16384 10 1"]  # wgpluck requires an excite function https://csound.github.io/docs/manual/wgpluck.html
@@ -132,7 +132,7 @@ class TestPlucksInScale(unittest.TestCase):
         output.write_and_play(output.get_csd([plucker], score))
 
     def test_scale_wgpluck_with_rhythm(self):
-        notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], n.find("D"))
+        notes = gen.get_notes_following_spline(get(td.T, location='Madrid'), td.T, cnc.SCALES["major"], nt.find("D"))
         rhythms = gen.get_events_following_spline(get(td.W, location='Madrid'), td.W, cnc.RHYTHM_STABILITY)
 
         log.debug(notes)
@@ -189,13 +189,13 @@ class TestDifferentPieceLengths(unittest.TestCase):
 
 class TestShepardTones(unittest.TestCase):
 
-    def basic_test(self, step_factor=1, step_function=None, initial_step=0.25, reverse=False,
+    def basic_test(self, step_factor=1.0, step_function=None, initial_step=0.25, reverse=False,
                    step_list=None, use_step_derivative=False):
 
         scale = cnc.SCALES["major"]
         levels = 10
         seq_length = len(scale) * (levels + 1)
-        log.debug("Testing Hanning Shepard with a cycle (following Hanning function) length of %s" % (seq_length))
+        log.debug("Testing Hanning Shepard with a cycle (following Hanning function) length of %s" % seq_length)
 
         for n in scale:
             n.octave += 1
@@ -203,7 +203,7 @@ class TestShepardTones(unittest.TestCase):
         notes = shep.generate_list(scale, length=30, levels=levels, give_index_instead_of_amplitudes=True)
         if reverse:
             notes.reverse()
-        log.debug("Notes: %s " % (notes))
+        log.debug("Notes: %s " % notes)
 
         score = ["f 1 0 16384 10 1",
                  "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
@@ -218,7 +218,7 @@ class TestShepardTones(unittest.TestCase):
                                                      use_function_as_envelope=True)
         output.write_and_play(output.get_csd([instr], score))
 
-    def generate_note_sequence(self, notes, initial_step=0.25, fixed_step_factor=1, step_function=None,
+    def generate_note_sequence(self, notes, initial_step=0.25, fixed_step_factor=1.0, step_function=None,
                                step_list=None, use_step_derivative=False):
 
         step = initial_step
@@ -231,8 +231,6 @@ class TestShepardTones(unittest.TestCase):
             log.debug("Length of step_list %s" % len(step_list))
 
         count = 0
-        i = 0
-
         while count < N:
 
             # Calculate step (ie "gap" between the notes or "speed" of the progression)
@@ -325,9 +323,9 @@ class TestShepardTones(unittest.TestCase):
             # log.debug("!!!!! Calculating inner step from outer: %s, chordindex0: %s to chordindex1: %s" % (
             #     outer_step, chordindex0, chordindex1))
 
-            ## TODO: Now this bit, instead of being linear, should also use
-            ## TODO:  - Gap length based on the interpolating function increases, no "inner_step"
-            ## TODO:  - The number of gaps should be based in the different value of origin vs dest value
+            # TODO: Now this bit, instead of being linear, should also use
+            # TODO:  - Gap length based on the interpolating function increases, no "inner_step"
+            # TODO:  - The number of gaps should be based in the different value of origin vs dest value
 
             valuegap = abs(value1 - value0)
             indexgap = outer_step
@@ -412,8 +410,8 @@ class TestShepardTones(unittest.TestCase):
 
         def get_value_and_chord_index(idx):
             val = value_function(idx)  # Value at this point
-            chordidx = int((val - value_range[0]) / (value_range[1] - value_range[0]) * number_of_chords_available)
-            return val, chordidx
+            chordindex = int((val - value_range[0]) / (value_range[1] - value_range[0]) * number_of_chords_available)
+            return val, chordindex
 
         time = 0
         score = []
