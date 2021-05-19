@@ -61,6 +61,7 @@ def generate_notes_from_harmonic_series(fundamental=110, transpose_octaves=0):
         nharm += 1
 
     notes = [(x[0] + transpose_octaves, x[1]) for x in notes]
+    log.debug("Returning notes %s, transposed %s" % (notes, transpose_octaves))
     return notes
 
 

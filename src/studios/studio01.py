@@ -12,7 +12,6 @@ from data import spline as sp
 class Studio01(Studio):
     """
     This studio takes cloud cover and wind data from Madrid,
-
     """
 
     def play(self):
