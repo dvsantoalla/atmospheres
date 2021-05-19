@@ -22,8 +22,7 @@ http://csoundjournal.com/ezine/winter2001/synthesis/index.html
 
 
 def get_drum_function(name):
-
-    if name=="bass":
+    if name == "bass":
         return get_kick_drum2, get_kick_drum2_note
     elif name == "snare":
         return get_snare4, get_snare4_note
