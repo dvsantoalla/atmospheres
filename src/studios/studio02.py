@@ -42,10 +42,13 @@ class Studio02(Studio):
         f2 = sp.generate_spline(data2, step=10)
 
         harmonics = harm.reduce_harmonics(
-            harm.generate_notes_from_harmonic_series(transpose_octaves=3), starting_octave=3)
+            harm.generate_notes_from_harmonic_series(transpose_octaves=3, num_harmonics=50), starting_octave=5)
         log.debug("Notes from harmonics %s" % harmonics)
+        harmonics = harm.add_amplitudes_to_reduced_harmonics(harmonics, repeated_octave_amplitude_factor=.85)
+        log.debug("Notes and amplitudes from harmonics %s" % harmonics)
 
-        instr, score = harm.sound_harmonics_from_data(harmonics, data1, value_range=[5, globalmax - globalmin-5])
+        instr, score = harm.sound_harmonics_from_data(harmonics, data1, volume=40,
+                                                      value_range=[0, globalmax - globalmin])
         csd = output.get_csd(instr, score)
         if plot:
             plt.plot_score(score)

@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 import sys
 from tests.notes_test import *
@@ -22,6 +23,8 @@ if pytesting or args and args.debug:
     log.warning("Debugging output enabled")
 else: 
     log.basicConfig(level=log.INFO)
+
+logging.getLogger("matplotlib").setLevel(logging.WARN)
 
 if args and args.output:
     csound.output.DAC = False
