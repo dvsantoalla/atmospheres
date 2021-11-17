@@ -1,12 +1,11 @@
-
 import logging as log
 from itertools import cycle
 
-from data import raised_and_normal
 import music.transpose as transpose
+from data import raised_and_normal
 
 
-def generate_cycles (scale, levels=1, give_index_instead_of_amplitudes=False):
+def generate_cycles(scale, levels=1, give_index_instead_of_amplitudes=False):
     """ Generate a list of cycles, each one of them generating a pair of (amp,note).
     There are as many cycles as levels (ie octaves) in the Shepard. 
     This function is interesting to get continuous Shepard tones, as long as we want. However
@@ -14,29 +13,29 @@ def generate_cycles (scale, levels=1, give_index_instead_of_amplitudes=False):
     """
 
     extended_scale = transpose.extend(scale, levels)
-    log.debug("Extended escale for cycle is %s long: %s" % (len(extended_scale),extended_scale))
-    amplitudes = []
+    log.debug("Extended scale for cycle is %s long: %s" % (len(extended_scale), extended_scale))
     if not give_index_instead_of_amplitudes:
-        amplitudes = raised_and_normal.raised_cosine(number_of_values=len(extended_scale)-1)
-        log.debug("Generated %s amplitudes, len of scale %s " % (len(amplitudes),len(extended_scale)))
-        amplitudes += [0]*(len(extended_scale)-len(amplitudes))
+        amplitudes = raised_and_normal.raised_cosine(number_of_values=len(extended_scale) - 1)
+        log.debug("Generated %s amplitudes, len of scale %s " % (len(amplitudes), len(extended_scale)))
+        amplitudes += [0] * (len(extended_scale) - len(amplitudes))
     else:
         amplitudes = [i for i in range(0, len(extended_scale))]
 
     result = []
-    for i in range(0,len(amplitudes)):
-        result.append((amplitudes[i],extended_scale[i]))
-    #print "Amps and Notes %s" % result
+    for i in range(0, len(amplitudes)):
+        result.append((amplitudes[i], extended_scale[i]))
+    # print "Amps and Notes %s" % result
 
     level_cycles = []
     for i in range(0, levels):
         c = cycle(result)
-        move = i*len(scale)
+        move = i * len(scale)
         for j in range(0, move):
             next(c)
         level_cycles.append(c)
-    
+
     return level_cycles
+
 
 def generate_list(scale, length=1, levels=1, give_index_instead_of_amplitudes=False):
     """ Generate a list of level cuts, with all the notes sounding at all levels at a point in time
@@ -46,21 +45,24 @@ def generate_list(scale, length=1, levels=1, give_index_instead_of_amplitudes=Fa
     produce the same as generate_cycles
     """
 
-    level_cycles = generate_cycles(scale, levels=levels, give_index_instead_of_amplitudes=give_index_instead_of_amplitudes)
+    level_cycles = generate_cycles(scale, levels=levels,
+                                   give_index_instead_of_amplitudes=give_index_instead_of_amplitudes)
     note_lists = []
 
-    for i in scale*length:
+    for i in scale * length:
         chord = []
         for c in level_cycles:
             chord.append(next(c))
-        chord = sorted(chord, key=lambda note: note[1].octave*12+note[1].semitones)
+        chord = sorted(chord, key=lambda note: note[1].octave * 12 + note[1].semitones)
         note_lists.append(chord)
 
     return note_lists
 
 
 def generate_from_values(scale, values):
+    log.debug(scale, values)
     pass
+
 
 def generate_shepard_risset_glissando():
     """ This is basically the same thing but with a glissando instead of individual notes
@@ -69,4 +71,3 @@ def generate_shepard_risset_glissando():
     fired that starts at the same point (eg C2). Every glissando note should have an amplitude distribution of 
     raised cosine, peaking at the center and disappearing at the beginning and the end"""
     pass
-

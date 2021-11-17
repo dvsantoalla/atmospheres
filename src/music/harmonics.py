@@ -73,6 +73,7 @@ def reduce_harmonics(harms, starting_octave=0):
         reduced.append((octave, s))
     return reduced
 
+
 def add_amplitudes_to_reduced_harmonics(harms, start_amplitude=1, repeated_octave_amplitude_factor=1):
     reduced_with_amplitudes = []
     for o, s in harms:
@@ -86,8 +87,8 @@ def add_amplitudes_to_reduced_harmonics(harms, start_amplitude=1, repeated_octav
     return reduced_with_amplitudes
 
 
-
 def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, value_range=[0, 40], volume=20):
+
     end_of_piece = len(data) * step
     rng = value_range
 

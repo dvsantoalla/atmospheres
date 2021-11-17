@@ -68,7 +68,3 @@ def index_for_value(value, lower_value_range, upper_value_range, lower_index, up
     indices = upper_index - lower_index
     norm_value = value - lower_value_range
     return int(norm_value * indices / rng + lower_index)
-
-
-
-

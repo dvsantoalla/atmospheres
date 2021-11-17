@@ -14,6 +14,8 @@ from music import harmonics as harm
 from music import notes as nt
 from music import shepard as shep
 
+import pprint
+
 
 def test_simple_soundwaves(osc=1, duration=30):
     """ Play a sine wave for each of the parameters of Madrid in 2014. Depending on the osc parameter
@@ -74,9 +76,9 @@ class TestHarmonics(unittest.TestCase):
     def test_harmonics(self):
         harmonics = harm.generate_notes_from_harmonic_series(transpose_octaves=5)
         log.debug("Harmonics are %s" % harmonics)
-
         harmonics = harm.reduce_harmonics(harmonics, starting_octave=5)
         log.debug("Reduced Harmonics are %s" % harmonics)
+        harmonics = harm.add_amplitudes_to_reduced_harmonics(harmonics)
 
         data = get(td.T, location='Madrid')
         instr, score = harm.sound_harmonics_from_data(harmonics, data, step=4)

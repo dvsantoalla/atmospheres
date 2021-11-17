@@ -4,10 +4,8 @@ import unittest
 from csound import output
 from data import constants as cc
 from data import get
-from data import spline as sp
 from music import concepts as cnc
 from music import generation as gen
-from music import harmonics as harm
 from music import notes as n
 from music import rhythms as rhy
 from music import transpose as t

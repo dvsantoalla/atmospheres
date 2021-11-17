@@ -2,7 +2,6 @@ import logging as log
 import random
 
 import matplotlib.pyplot as plt
-
 from data.spline import generate_spline
 
 

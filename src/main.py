@@ -1,10 +1,10 @@
 import argparse
 import logging
-
 import sys
+
+import csound.output
 from tests.notes_test import *
 from tests.sounds_test import *
-import csound.output
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-t', '--test', help="Run the following tests or 'all'")

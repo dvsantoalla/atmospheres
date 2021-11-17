@@ -1,12 +1,12 @@
 import logging as log
 
 from csound import output
+from data import constants as cc
 from data import get
-from studios import Studio
+from data import spline as sp
 from music import harmonics as harm
 from music import rhythms as rhy
-from data import constants as cc
-from data import spline as sp
+from studios import Studio
 
 
 class Studio01(Studio):
