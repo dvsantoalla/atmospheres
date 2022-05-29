@@ -20,7 +20,7 @@ def get(parameter, location=None, lat=None, lon=None, date=None, time="0000", da
                                                             collection))
 
     if datadir is None:
-        datadir = os.environ.get("ATMOSPHERES_DATADIR", "../atmospheres-misc/data")
+        datadir = os.environ.get("ATMOSPHERES_DATADIR", "../../atmospheres-misc/data")
 
     datadir += "/" + collection
     files = os.listdir(datadir)
@@ -77,10 +77,12 @@ def get_meteogram_json_data(f, location, parameter, datadir, datatype):
 
 def get_csv_data(filename, datadir):
     data = []
-    for line in open(datadir+"/"+filename).readlines():
+    data_file = open(datadir+"/"+filename)
+    for line in data_file.readlines():
         bits = line.strip().split(",")
         if bits[0].isnumeric() and len(bits) == 3:
             data.append((float(bits[1]), float(bits[2]), int(bits[0])))
+    data_file.close()
     return data
 
 

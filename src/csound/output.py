@@ -2,6 +2,7 @@ import logging as log
 import os
 import sys
 from subprocess import Popen, PIPE
+from shutil import which
 
 DAC = True
 FILENAME = "output.wav"
@@ -51,8 +52,7 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     else:
         use_dac = DAC
 
-    csound = os.environ.get("CSOUND", "csound")
-    log.debug("Using csound binary: %s" % csound)
+    csound = find_csound_executable()
 
     # run generation out to device or wav file
     proc = Popen([csound, tempfile], stdout=PIPE, stderr=PIPE)
@@ -75,5 +75,30 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     for ln in stdout:
         log.debug(ln)
 
+
+def find_csound_executable():
+
+    try_paths = ["/opt/homebrew/bin/csound", "/bin/csound", "/usr/bin/csound"]
+
+    log.debug("Trying to find 'csound' in CSOUND environment variable, if present...")
+    csound = os.environ.get("CSOUND", None)
+    if csound is None:
+        log.debug("Trying to find 'csound' in standard PATH...")
+        csound = which("csound")
+    if csound is None:
+        log.debug("Trying to find 'csound' in predefined standard locations %s ..." %(try_paths))
+        for p in try_paths:
+            log.warning("Looking for 'csound' in path %s ..." % p)
+            if os.access(p, os.X_OK):
+                log.debug("'csound' found in path %s" % p)
+                csound = p
+                break
+
+    if csound is not None:
+        log.debug("Using csound binary: %s" % csound)
+        return csound
+    else:
+        raise BaseException("'csound' binary not found. Tried standard PATH, environment variable CSOUND and paths in %s)"
+              % (try_paths))
 
 # Optionally play and/or archive the audio file

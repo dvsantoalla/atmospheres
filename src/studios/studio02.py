@@ -42,7 +42,9 @@ class Studio02(Studio):
         harmonics = harm.reduce_harmonics(
             harm.generate_notes_from_harmonic_series(transpose_octaves=3, num_harmonics=50), starting_octave=5)
         log.debug("Notes from harmonics %s" % harmonics)
-        harmonics = harm.add_amplitudes_to_reduced_harmonics(harmonics, repeated_octave_amplitude_factor=.85)
+        # repeated_octave_amplitude_factor=1.85 generates quite a bit of distortion/overdrive but sounds cool
+        # repeated_octave_amplitude_factor=0.85 is safe (but boring ;) )
+        harmonics = harm.add_amplitudes_to_reduced_harmonics(harmonics, repeated_octave_amplitude_factor=1.85)
         log.debug("Notes and amplitudes from harmonics %s" % harmonics)
 
         instr, score = harm.sound_harmonics_from_data(harmonics, data1, volume=40,
