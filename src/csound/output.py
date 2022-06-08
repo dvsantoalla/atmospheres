@@ -1,7 +1,7 @@
 import logging as log
 import os
 import sys
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 from shutil import which
 
 DAC = True
@@ -55,9 +55,10 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     csound = find_csound_executable()
 
     # run generation out to device or wav file
-    proc = Popen([csound, tempfile], stdout=PIPE, stderr=PIPE)
+    proc = Popen([csound, tempfile], stdout=PIPE, stderr=STDOUT)
+    stdout, stderr = proc.communicate()
     if use_dac:
-        for line in iter(proc.stderr.readline, ''):
+        for line in iter(stdout.readline, b""):
             error_line = line.rstrip()
             if len(error_line) == 0:
                 break
@@ -67,12 +68,10 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     log.debug("Process %s returned code %s from %s" % (csound, rc, proc))
 
     if not use_dac:
-        errout = proc.stderr.readlines()
-        for ln in errout:
+        for ln in stderr.readlines():
             log.debug(ln)
 
-    stdout = proc.stdout.readlines()
-    for ln in stdout:
+    for ln in stdout.readlines():
         log.debug(ln)
 
 

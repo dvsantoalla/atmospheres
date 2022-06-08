@@ -87,7 +87,8 @@ def add_amplitudes_to_reduced_harmonics(harms, start_amplitude=1, repeated_octav
     return reduced_with_amplitudes
 
 
-def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, value_range=[0, 40], volume=20):
+def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, value_range=[0, 40],
+                              volume=20, reverb_length=0, reverb_mix=0):
 
     end_of_piece = len(data) * step
     rng = value_range
@@ -97,7 +98,7 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, valu
 
     log.info("The number of data points is %s, number of harmonics is %s, value range is %s" %
              (len(data), len(harmonics), rng))
-    harm_step = (rng[1] - rng[0]) / float(len(harmonics))
+    harm_step = (rng[1] - rng[0]) / float(len(harmonics)-1) # TODO: Understand why we don't generate exactly len(harmonics) values
     for i in np.arange(rng[0], rng[1], harm_step):
         log.debug("Getting roots for step %s" % i)
         # ylines.append(i)
@@ -113,15 +114,17 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, valu
              "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
              "f3 0 16384 10 1 0   0.3 0    0.2 0     0.14 0     .111   ; Square",
              "f4 0 16384 20 2 1 ; Hanning window",
-             "f5 0 16384 8  0 2048 1 2048 3 2048 4 2048 5 2048 4 2048 5 2048 4 2048 0 ; Spline"
-             ]
+             "f5 0 16384 8  0 2048 1 2048 3 2048 4 2048 5 2048 4 2048 5 2048 4 2048 0 ; Spline",
+             "i99 0 500 ; Reverb sound all time"
+             ] # TODO: Length of reverb must be calculated
 
     bottom = True
     harm_idx = 0
+    log.info("Calculated %s sets of notes per harmonic for %s harmomics" % (len(notes_per_harmonic), len(harmonics)))
     for n in notes_per_harmonic:
         prev_cut_x = 0
         note = harmonics[harm_idx]
-        log.debug("Generating notes for harmonic at 'y' value %s, note %s" % (n[0], note))
+        log.debug("Generating notes for harmonic at y=%s, idx=%s, note %s" % (n[0], harm_idx, note))
         cuts = n[1]
         amplitude = float(volume) * note[2]
         if len(cuts) == 0 and bottom:
@@ -153,6 +156,7 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, valu
 
     instr = orc.table_modulated_basic_wave(instrument_number=instrument_number, oscillator_function_number=3,
                                            modulating_function_number=5, seq_length=end_of_piece,
-                                           use_function_as_envelope=True)
+                                           use_function_as_envelope=True, sends={"ga1": 1})
+    rev = orc.reverberation(input_global_signal="ga1", length=reverb_length, mix=reverb_mix)
 
-    return [instr], score
+    return [instr, rev], score

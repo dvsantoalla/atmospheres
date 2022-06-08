@@ -33,7 +33,8 @@ def plot_score(score):
     data = []
     notes = []
     for line in score:
-        if line.strip().startswith("i"):
+        if line.strip().startswith("i") and \
+                not line.strip().startswith("i99"): # Ignore global channels
             bits = line.split()
             log.debug(bits)
             start = float(bits[1])
@@ -51,9 +52,8 @@ def plot_score(score):
     plt.show()
 
 
-
-
 def test():
+
     x = [x * 6 for x in range(0, 10 * 4)]
     s1 = generate_spline([random.random() * 10 for i in x], step=6)
     s2 = generate_spline([random.random() * 20 for i in x], step=6)

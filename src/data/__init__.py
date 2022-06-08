@@ -1,6 +1,7 @@
 import json
 import logging as log
 import os
+import numpy as np
 
 import data.constants as c
 
@@ -111,3 +112,8 @@ def describe(data):
         total += i
 
     return minimum, maximum, total / len(data)
+
+
+def moving_average(data, window=5):
+    return np.convolve(data, np.ones(window) / window, mode='valid')
+

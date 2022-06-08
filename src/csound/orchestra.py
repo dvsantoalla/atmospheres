@@ -40,7 +40,8 @@ def basic_wave(instrument_number=1, function_number=1):
 
 
 def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1, modulating_function_number=2,
-                         seq_length=7, table_length=16384, use_function_as_envelope=False, amplitude=50000):
+                         seq_length=7, table_length=16384, use_function_as_envelope=False, amplitude=50000,
+                               sends=None):
     """
     http://www.csounds.com/manual/html/GEN10.html
     Requires a function f function_number defining the waveform, eg
@@ -68,8 +69,17 @@ def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1
         asig oscil iamp * %s * kampfactor , cpspch(p5), %s
     """ % (table_length, modulating_function_number, amplitude, oscillator_function_number)
 
-    csd = """
+    sends_code = ""
+    sends_init = ""
+    if sends is not None and len(sends)>0:
+        for k in sends:
+            sends_code += " %s += asig * %s ;add direct signal (assumed 'asig') to global channel\n" % (k, sends[k])
+            sends_init += " %s init 0\n" % (k)
 
+
+    csd = """
+    %s
+    
         instr %s
             
             ;printks "p4 (index) %%d \\n", 1, p4 
@@ -81,11 +91,11 @@ def table_modulated_basic_wave(instrument_number=1, oscillator_function_number=1
             ;printks "iamp: %%f\\n",  1, iamp
     %s
             out asig
-            
+    %s      
         endin
 
-        """ % (instrument_number, seq_length, table_length, modulating_function_number,
-               oscillator)
+        """ % (sends_init, instrument_number, seq_length, table_length, modulating_function_number,
+               oscillator, sends_code)
     return csd
 
 
@@ -292,3 +302,16 @@ endin
     return csd
 
 
+def reverberation(instrument_number=99, input_global_signal="ga1", length=1.5, mix=1.0):
+
+    csd = """
+instr %s	;(highest instr number executed last)
+
+arev reverb %s, %s
+     out arev * %s
+  
+ga1  = 0	;clear
+endin
+    """ % (instrument_number, input_global_signal, length, mix)
+
+    return csd
