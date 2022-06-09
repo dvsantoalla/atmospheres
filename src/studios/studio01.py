@@ -35,7 +35,8 @@ class Studio01(Studio):
         for i in range(0, (len(data1) - 1) * 10):
             interp_data1.append(f1(i))
 
-        instr1, score1 = harm.sound_harmonics_from_data(harmonics, interp_data1, step=1, instrument_number=55,
+        harmonics_amp = harm.add_amplitudes_to_reduced_harmonics(harmonics, repeated_octave_amplitude_factor=0.85)
+        instr1, score1 = harm.sound_harmonics_from_data(harmonics_amp, interp_data1, step=1, instrument_number=55,
                                                         value_range=(min(data1), max(data1)))
 
         # This works

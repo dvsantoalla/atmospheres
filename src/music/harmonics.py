@@ -126,6 +126,7 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, valu
         note = harmonics[harm_idx]
         log.debug("Generating notes for harmonic at y=%s, idx=%s, note %s" % (n[0], harm_idx, note))
         cuts = n[1]
+        assert(len(note) > 2)
         amplitude = float(volume) * note[2]
         if len(cuts) == 0 and bottom:
             log.debug("** Generating full note, for all the duration of the piece, still below the values")

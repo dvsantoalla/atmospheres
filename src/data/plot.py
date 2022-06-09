@@ -1,3 +1,4 @@
+import os
 import logging as log
 import random
 
@@ -6,6 +7,10 @@ from data.spline import generate_spline
 
 
 def plot_test_multi(datasets, step=1, file=None, additional_ys=[], show=True):
+
+    if "ATMOSPHERES_WAV_OUTPUT" in os.environ:
+        log.info("Bypassing plotting because of ATMOSPHERES_WAV_OUTPUT set")
+        return
 
     for yvals in datasets:
         #log.debug("yvals %s" % yvals)
@@ -29,6 +34,10 @@ def plot_test_multi(datasets, step=1, file=None, additional_ys=[], show=True):
 
 
 def plot_score(score):
+
+    if "ATMOSPHERES_WAV_OUTPUT" in os.environ:
+        log.info("Bypassing plotting because of ATMOSPHERES_WAV_OUTPUT set")
+        return
 
     data = []
     notes = []
