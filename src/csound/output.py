@@ -10,7 +10,7 @@ FILENAME = "output.wav"
 
 def get_csd(orchestra, score, headers=[]):
 
-    if "pytest" in sys.modules:
+    if "ATMOSPHERES_WAV_OUTPUT" in os.environ:
         output_file = "-o pytest.wav"
     elif DAC:
         output_file = "-odac"
@@ -47,7 +47,7 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     out.write(csdcontent)
     out.close()
 
-    if "pytest" in sys.modules:
+    if "ATMOSPHERES_WAV_OUTPUT" in os.environ:
         use_dac = False
     else:
         use_dac = DAC
@@ -55,7 +55,7 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     csound = find_csound_executable()
 
     # run generation out to device or wav file
-    proc = Popen([csound, tempfile], stdout=PIPE, stderr=STDOUT)
+    proc = Popen([csound, tempfile], stdout=PIPE, stderr=STDOUT, text=True)
     stdout, stderr = proc.communicate()
     if use_dac:
         for line in iter(stdout.readline, b""):
@@ -67,12 +67,12 @@ def write_and_play(csdcontent, tempfile="out.csd"):
     rc = proc.returncode
     log.debug("Process %s returned code %s from %s" % (csound, rc, proc))
 
-    if not use_dac:
-        for ln in stderr.readlines():
-            log.debug(ln)
-
-    for ln in stdout.readlines():
-        log.debug(ln)
+    if stdout is not None:
+        for i in stdout.split("\n"):
+            log.info(i)
+    if stderr is not None:
+        for i in stderr.split("\n"):
+            log.warning(i)
 
 
 def find_csound_executable():

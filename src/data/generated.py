@@ -3,8 +3,8 @@ import logging as log
 import spline
 
 
-def get_oscilation_test_data(startvalue,slope=0,oscilations=10,initial_oscilation_amplitude=1,
-                             final_oscilation_amplitude=20,number_of_values=40,interpolated=True):
+def get_oscilation_test_data(startvalue,slope=0, oscilations=10, initial_oscilation_amplitude=1,
+                             final_oscilation_amplitude=20, number_of_values=40, interpolated=True):
     """Get values that go from minimum to maximum, with a given number of oscilations,
     that increase or decrease linearly in amplitude with every oscilation"""
 
