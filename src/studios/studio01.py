@@ -35,9 +35,10 @@ class Studio01(Studio):
         for i in range(0, (len(data1) - 1) * 10):
             interp_data1.append(f1(i))
 
-        harmonics_amp = harm.add_amplitudes_to_reduced_harmonics(harmonics, repeated_octave_amplitude_factor=0.85)
-        instr1, score1 = harm.sound_harmonics_from_data(harmonics_amp, interp_data1, step=1, instrument_number=55,
-                                                        value_range=(min(data1), max(data1)))
+        harmonics = harm.add_amplitudes_to_reduced_harmonics(harmonics, repeated_octave_amplitude_factor=0.85)
+        instr1, score1 = harm.sound_harmonics_from_data(harmonics, interp_data1, step=1, instrument_number=55,
+                                                        value_range=(min(data1), max(data1)), reverb_length=0,
+                                                        reverb_mix=0, volume=30)
 
         # This works
         # instr1, score1 = harm.sound_harmonics_from_data(harmonics, data1, step=10, instrument_number=55)
@@ -69,3 +70,4 @@ class Studio01(Studio):
         # output.write_and_play(output.get_csd(instr2, score2, headers=headers))
 
         output.write_and_play(output.get_csd(instr1 + instr2, score1 + score2, headers=headers))
+        #output.write_and_play(output.get_csd(instr1 , score1))

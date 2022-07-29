@@ -114,7 +114,7 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, valu
              "f2 0 16384 10 1 0.5 0.3 0.25 0.2 0.167 0.14 0.125 .111   ; Sawtooth",
              "f3 0 16384 10 1 0   0.3 0    0.2 0     0.14 0     .111   ; Square",
              "f4 0 16384 20 2 1 ; Hanning window",
-             "f5 0 16384 8  0 2048 1 2048 3 2048 4 2048 5 2048 4 2048 5 2048 4 2048 0 ; Spline",
+             "f6 0 16384 8  0 2048 1 2048 3 2048 4 2048 5 2048 4 2048 5 2048 4 2048 0 ; Spline",
              "i99 0 500 ; Reverb sound all time"
              ] # TODO: Length of reverb must be calculated
 
@@ -156,8 +156,8 @@ def sound_harmonics_from_data(harmonics, data, step=1, instrument_number=1, valu
         harm_idx += 1
 
     instr = orc.table_modulated_basic_wave(instrument_number=instrument_number, oscillator_function_number=3,
-                                           modulating_function_number=5, seq_length=end_of_piece,
-                                           use_function_as_envelope=True, sends={"ga1": 1})
+                                           modulating_function_number=6, seq_length=end_of_piece,
+                                           use_function_as_envelope=True, sends={"ga1": 1}, amplitude=10000)
     rev = orc.reverberation(input_global_signal="ga1", length=reverb_length, mix=reverb_mix)
 
     return [instr, rev], score

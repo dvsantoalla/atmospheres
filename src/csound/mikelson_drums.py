@@ -85,7 +85,7 @@ def get_kick_drum1():
 idur	=	p3		; Duration
 iamp	=	p4		; Amplitude
 ilowf	=	p5		; Low frequency
-ihif	=	p6		; High freqency
+ihif	=	p6		; High frequency
 ipanl	=	sqrt(p7)	; Pan left & right use sqrt
 ipanr	=	sqrt(1-p7)	; for smoother panning
 iacc	=	p8		; Accent

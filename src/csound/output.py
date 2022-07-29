@@ -1,6 +1,7 @@
 import logging as log
 import os
-import sys
+import datetime
+import traceback
 from subprocess import Popen, PIPE, STDOUT
 from shutil import which
 
@@ -17,10 +18,20 @@ def get_csd(orchestra, score, headers=[]):
     else:
         output_file = "-o %s" % FILENAME
 
+    # Who generated this file
+    a = traceback.extract_stack(limit=3)
+    trace_list = traceback.format_list(a)
+    traces = "\n\n; Traces for the file generation call, called at %s\n" % datetime.datetime.now()
+    for item in trace_list:
+        for line in item.split("\n"):
+            traces += "; %s \n" % line
+    log.info("Traces into file: %s" % traces)
+
     csd = """
 <CsoundSynthesizer>
 <CsOptions>
         csound -W -G %s
+%s
 </CsOptions>
 <CsInstruments>
         sr = 44100  ; Sample rate.
@@ -37,7 +48,7 @@ def get_csd(orchestra, score, headers=[]):
 e
 </CsScore>
 </CsoundSynthesizer>
-""" % (output_file, ("\n").join(headers), ("\n").join(orchestra), ("\n").join(score))
+""" % (output_file, traces, ("\n").join(headers), ("\n").join(orchestra), ("\n").join(score))
     return csd
 
 
