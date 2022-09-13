@@ -67,7 +67,9 @@ def write_and_play(csdcontent, tempfile="out.csd"):
 
     # run generation out to device or wav file
     proc = Popen([csound, tempfile], stdout=PIPE, stderr=STDOUT, text=True)
+
     stdout, stderr = proc.communicate()
+
     if use_dac:
         for line in iter(stdout.readline, b""):
             error_line = line.rstrip()

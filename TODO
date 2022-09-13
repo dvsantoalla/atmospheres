@@ -9,4 +9,4 @@
 	Partikkel grain synth
 
 
-- Lower priority. Try to get data from ECMWF via web api
+- Lower priority. Getting data from ECMWF in real time via web api
