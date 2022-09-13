@@ -45,7 +45,7 @@ class Studio02(Studio):
         # Move the data so that it is based on zero as the min value
         wdata1, wdata2 = [x - min1 for x in wdata1], [x - min2 for x in wdata2]
         harmonics = harm.reduce_harmonics(
-            harm.generate_notes_from_harmonic_series(transpose_octaves=3, num_harmonics=50), starting_octave=5)
+            harm.generate_notes_from_harmonic_series(transpose_octaves=3, num_harmonics=50), starting_octave=4)
         #log.debug("Notes from harmonics %s" % harmonics)
         # repeated_octave_amplitude_factor=1.85 generates quite a bit of distortion/overdrive but sounds cool
         # repeated_octave_amplitude_factor=0.85 is safe (but boring ;) )

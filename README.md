@@ -21,7 +21,7 @@ Python framework to produce music from weather data
 - Music that is unique for a moment. Disposable, ephemeral art. Fluxus, Beuys. No one should
     listen to the same piece twice as they always can access the latest.
 - Music as Ephemera (3)
-- Program music (4). In this case the "programme" is the real life events
+- Program music (4). In this case the "extramusical narrative" is the real life weather events
 - Computer centred compositional techniques
 - Weather makes us feel time, seasons are the reason for the first calendars. Feel the passing of
   time, different timescales. How can we apply these different timescales?
