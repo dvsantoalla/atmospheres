@@ -1,8 +1,8 @@
-Atmospheres
+# Atmospheres
 
 Python framework to produce music from weather data
 
-* Fundamental aspects
+## Fundamental aspects
 
 - Generate music that is artistically valid on its own accord, not just as
   "representation" of data or as an "aural visualization". Its use is not just a direct "communication" of the data
@@ -14,7 +14,7 @@ Python framework to produce music from weather data
 - Will show a connection between the earth and the emotions
 - Time travel?
 
-* General assorted leads
+## General assorted leads
 
 - Following patterns of the Earth (eg day/night, rain/dry, cloudy/sunny, hot/warm)
 - Granular synthesis. Waves vs particles
@@ -28,7 +28,7 @@ Python framework to produce music from weather data
 - The concepts of stable/unstable belong both in music and in meteorology
 - Weather and behaviour (6). The psychology of weather
 
-* Examples of weather in music
+## Examples of weather in music
 
 - Good vibrations
 - Rain (Beatles)
@@ -36,7 +36,7 @@ Python framework to produce music from weather data
 - Sunny Afternoon
 - Paper about weather in music (2)
 
-* Parameter to musical concept mappings
+## Parameter to musical concept mappings
 
 Ideas on how to map individual weather parameters to music and sound parameters
 
@@ -62,19 +62,20 @@ Ideas on how to map individual weather parameters to music and sound parameters
 - Lagging-leading with the rhythm.
 
 
-* Technical aspects
+## Technical aspects
 
-- Required python modules
+### Required python modules
 
  - matplotlib for debugging and showing off
  - scipy
  - Exploring how to do animations
+ 
+### Other requirements
 
-- Other requirements
  - Csound for realtime playing or batch-mode (generate orchestra+score then render)?
 
 
-* References
+## References
 
 1. http://en.wikipedia.org/wiki/Sonification
 2. http://www.metlink.org/wp-content/uploads/2013/06/Brown_et_al-2015-Weather.pdf
